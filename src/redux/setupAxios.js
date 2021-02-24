@@ -1,5 +1,6 @@
-//import Swal from "sweetalert2";
-//import withReactContent from "sweetalert2-react-content";
+/*import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import msgs from '../utils/msgs';*/
 
 export default function setupAxios(axios, store) {
     /*const swal = withReactContent(Swal);

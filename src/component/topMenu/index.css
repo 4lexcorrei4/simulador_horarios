@@ -21,11 +21,17 @@
     margin-right: 10px;
 }
 
-#topMenu input,
+#topMenu select {
+    height: 40px;
+    width: 300px;
+    margin-left: 10px;
+}
+
+/*#topMenu input,
 #topMenu .inputDropdown .results {
     width: 400px;
 }
 
 #topMenu .inputDropdown .results {
     width: calc(400px - 20px);
-}
+}*/

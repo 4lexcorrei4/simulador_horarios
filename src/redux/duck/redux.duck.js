@@ -10,6 +10,7 @@ import * as api from "../api/api";
 
 export const types = {
     Init: "[Redux] Init",
+    SetTime: "[Redux] SetTime",
     GetDepartments: "[Redux] GetDepartments",
     SetDepartments: "[Redux] SetDepartments",
     SetDepartment: "[Redux] SetDepartment",
@@ -19,6 +20,28 @@ export const types = {
 };
 
 const initialState = {
+    time: {
+        all: [
+            {
+                year: 2021,
+                times: [
+                    {
+                        id: 1,
+                        name: "1º Semestre"
+                    },
+                    {
+                        id: 2,
+                        name: "Trimestre"
+                    },
+                    {
+                        id: 3,
+                        name: "2º Semestre"
+                    }
+                ]
+            }
+        ],
+        chosen: "2021-3"
+    },
     department: {
         all: [],
         chosen: undefined
@@ -30,27 +53,46 @@ const initialState = {
 };
 
 export const reducer = persistReducer(
-    {storage, key: "simulador-horarios", whitelist: ["department", "subject"]},
+    {storage, key: "simulador-horarios"},
     (state = initialState, action) => {
         switch (action.type) {
+            case types.SetTime: {
+                const newState = {...state};
+                newState.time = {
+                    ...state.time,
+                    chosen: action.payload
+                };
+            }
             case types.SetDepartments: {
                 const newState = {...state};
-                newState.department.all = action.payload;
+                newState.department = {
+                    ...state.department,
+                    all: action.payload
+                };
                 return newState;
             }
             case types.SetDepartment: {
                 const newState = {...state};
-                newState.department.chosen = action.payload;
+                newState.department = {
+                    ...state.department,
+                    chosen: action.payload
+                };
                 return newState;
             }
             case types.SetSubjects: {
                 const newState = {...state};
-                newState.subject.all = action.payload;
+                newState.subject = {
+                    ...state.subject,
+                    all: action.payload
+                };
                 return newState;
             }
             case types.SetSubject: {
                 const newState = {...state};
-                newState.subject.chosen = action.payload;
+                newState.subject = {
+                    ...state.subject,
+                    chosen: action.payload
+                };
                 return newState;
             }
             default:
@@ -61,6 +103,7 @@ export const reducer = persistReducer(
 
 export const actions = {
     init: () => ({ type: types.Init }),
+    setTime: (time) => ({ type: types.SetTime, payload: time }),
     getDepartments: () => ({ type: types.GetDepartments }),
     setDepartments: (departments) => ({ type: types.SetDepartments, payload: departments }),
     setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
@@ -77,8 +120,8 @@ export function* saga() {
         const {data} = yield api.getDepartments();
         yield put(actions.setDepartments(data));
     });
-    yield takeLatest(types.SetDepartment, function* ({payload}) {
-        const {data} = yield api.getDepartmentSubjects(payload);
+    yield takeLatest(types.SetDepartment, function* ({payload: department}) {
+        const {data} = yield api.getDepartmentSubjects(department);
         yield put(actions.setSubjects(data.classes));
     });
 }
