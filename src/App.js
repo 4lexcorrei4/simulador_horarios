@@ -6,6 +6,7 @@ import {Provider} from "react-redux";
 import {PersistGate} from "redux-persist/integration/react";
 import './component/global.css';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import PageContainer from "./container/page";
 
 function App() {
   _redux.setupAxios(axios, store);
@@ -13,7 +14,7 @@ function App() {
   return (
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={null}>
-
+            <PageContainer />
         </PersistGate>
       </Provider>
   );

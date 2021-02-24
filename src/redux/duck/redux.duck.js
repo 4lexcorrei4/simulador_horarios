@@ -9,54 +9,48 @@ import * as api from "../api/api";
 //const swal = withReactContent(Swal);
 
 export const types = {
-    Login: "[Account] Login",
-    AfterLogin: "[Account] AfterLogin",
-    Signup: "[Account] Signup",
-    Logout: "[Account] Logout",
-    ChangePassword: "[Redux] ChangePassword",
-    GetBalanceList: "[Redux] GetBalanceList",
-    SetBalanceList: "[Redux] SetBalanceList",
-    GetUserInfo: "[Redux] GetUserInfo",
-    SetUserInfo: "[Redux] SetUserInfo",
+    Init: "[Redux] Init",
+    GetDepartments: "[Redux] GetDepartments",
+    SetDepartments: "[Redux] SetDepartments",
+    SetDepartment: "[Redux] SetDepartment",
+    GetDepartmentSubjects: "[Redux] GetDepartmentSubjects",
+    SetSubjects: "[Redux] SetSubjects",
+    SetSubject: "[Redux] SetSubject"
 };
 
 const initialState = {
-    username: undefined,
-    email: undefined,
-    token: undefined,
-    expires: undefined,
-    role: undefined,
-    balances: [],
-    orders: {
-        open: [],
-        filled: []
+    department: {
+        all: [],
+        chosen: undefined
+    },
+    subject: {
+        all: [],
+        chosen: undefined
     }
 };
 
 export const reducer = persistReducer(
-    {storage, key: "lofi-account", whitelist: ["username", "email", "token", "expires", "role", "balances", "orders"]},
+    {storage, key: "simulador-horarios", whitelist: ["department", "subject"]},
     (state = initialState, action) => {
         switch (action.type) {
-            case types.AfterLogin: {
+            case types.SetDepartments: {
                 const newState = {...state};
-                newState.username = action.payload.username;
-                newState.token = action.payload.token;
-                newState.expirationDate = action.payload.expirationDate;
-                newState.role = action.payload.role;
+                newState.department.all = action.payload;
                 return newState;
             }
-            case types.Logout: {
-                const newState = {...initialState};
+            case types.SetDepartment: {
+                const newState = {...state};
+                newState.department.chosen = action.payload;
                 return newState;
             }
-            case types.SetBalanceList: {
+            case types.SetSubjects: {
                 const newState = {...state};
-                newState.balances = action.payload;
+                newState.subject.all = action.payload;
                 return newState;
             }
-            case types.SetUserInfo: {
+            case types.SetSubject: {
                 const newState = {...state};
-                newState.email = action.payload;
+                newState.subject.chosen = action.payload;
                 return newState;
             }
             default:
@@ -66,72 +60,25 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-    login: (username, password) => ({ type: types.Login, payload:{username, password}}),
-    afterLogin: (username, token , expirationDate, role) => ({type: types.AfterLogin, payload: {username, token, expirationDate, role}}),
-    signup: (username, mail, password, confirmation) => ({ type: types.Signup, payload: { username, mail, password, confirmation } }),
-    logout: () => ({ type: types.Logout }),
-    changePassword: (oldPwd, newPwd, confirmPwd) => ({ type: types.ChangePassword, payload : { oldPwd, newPwd, confirmPwd } }),
-    getBalanceList: () => ({ type: types.GetBalanceList }),
-    setBalanceList: (list) => ({ type: types.SetBalanceList, payload: list }),
-    getUserInfo: () => ({ type: types.GetUserInfo }),
-    setUserInfo: (list) => ({ type: types.SetUserInfo, payload: list })
+    init: () => ({ type: types.Init }),
+    getDepartments: () => ({ type: types.GetDepartments }),
+    setDepartments: (departments) => ({ type: types.SetDepartments, payload: departments }),
+    setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
+    getDepartmentSubjects: (department) => ({ type: types.GetDepartmentSubjects, payload: department }),
+    setSubjects: (subjects) => ({ type: types.SetSubjects, payload: subjects }),
+    setSubject: (subject) => ({ type: types.SetSubject, payload: subject })
 };
 
 export function* saga() {
-    /*yield takeLatest(types.Login, function* ({payload: {username, password}}) {
-        const response = yield api.login(username, password);
-        if (response.status != 200)
-            yield put(generalActions.setErrorMsg("login", msgs.generic[response.response.data]));
-        else {
-            const {data} = response;
-            yield put(actions.afterLogin(data.username, data.tokenId, data.expirationData, data.role));
-        }
+    yield takeLatest(types.Init, function* () {
+        yield put(actions.getDepartments());
     });
-    yield takeLatest(types.Signup, function* ({payload: {username, mail, password, confirmation}}) {
-        const response = yield api.signup(username, mail, password, confirmation);
-        if (response.status != 200)
-            yield put(generalActions.setErrorMsg("signup", msgs.generic[response.response.data]));
-        else {
-            const {data} = response;
-            yield put(actions.afterLogin(data.username, data.tokenId, data.expirationData, data.role));
-        }
+    yield takeLatest(types.GetDepartments, function* () {
+        const {data} = yield api.getDepartments();
+        yield put(actions.setDepartments(data));
     });
-    yield takeLatest(types.Logout, function* () {
-        const { username, token } = yield select(state => state.account);
-        yield api.logout(username, token);
+    yield takeLatest(types.SetDepartment, function* ({payload}) {
+        const {data} = yield api.getDepartmentSubjects(payload);
+        yield put(actions.setSubjects(data.classes));
     });
-    yield takeLatest(types.ChangePassword, function* ({payload: {oldPwd, newPwd, confirmPwd}}) {
-        const { username, token } = yield select(state => state.account);
-        const response = yield api.changePassword(username, token, oldPwd, newPwd, confirmPwd);
-        if (response.status != 200)
-            yield put(generalActions.setErrorMsg("changePassword", msgs.generic[response.response.data]));
-        else {
-            swal.fire({
-                title: response.data,
-                showConfirmButton: true,
-                showCancelButton: false,
-                icon: "info"
-            })
-                .then(result => {
-                    if (result.isConfirmed)
-                        window.location.reload();
-                });
-        }
-    });
-    yield takeLatest(types.GetBalanceList, function* () {
-        const { username, token } = yield select(state => state.account);
-        const res = yield api.getBalanceList(username, token);
-        let balances = {};
-        res.data.forEach(balance => {
-            let tokenSymbol = balance.key.path[0].name.split("-")[0];
-            balances[tokenSymbol] = balance.properties.quantity.value;
-        });
-        yield put(actions.setBalanceList(balances));
-    });
-    yield takeLatest(types.GetUserInfo, function* () {
-        const { username, token } = yield select(state => state.account);
-        const res = yield api.getUserInfo(username, token);
-        let {data} = res;
-        yield put(actions.setUserInfo(data[0]));
-    });*/
 }
