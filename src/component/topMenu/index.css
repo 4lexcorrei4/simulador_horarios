@@ -27,11 +27,32 @@
     margin-left: 10px;
 }
 
-/*#topMenu input,
-#topMenu .inputDropdown .results {
-    width: 400px;
+#subTopMenu {
+    display: flex;
+    width: calc(100% - 20px);
+    background-color: var(--sub-top-menu-bg-color);
+    padding: 10px;
 }
 
-#topMenu .inputDropdown .results {
-    width: calc(400px - 20px);
-}*/
+#subTopMenu div {
+    background-color: var(--sub-top-menu-subject-bg-color);
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+#subTopMenu div span {
+    font-size: 15px;
+    margin-left: 5px;
+    background-color: var(--sub-top-menu-subject-cross-bg-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}

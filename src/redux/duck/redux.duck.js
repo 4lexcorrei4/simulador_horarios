@@ -16,7 +16,9 @@ export const types = {
     SetDepartment: "[Redux] SetDepartment",
     GetDepartmentSubjects: "[Redux] GetDepartmentSubjects",
     SetSubjects: "[Redux] SetSubjects",
-    SetSubject: "[Redux] SetSubject",
+    AddSubject: "[Redux] AddSubject",
+    AddSubjectDone: "[Redux] AddSubjectDone",
+    RemoveSubject: "[Redux] RemoveSubject",
     SetShifts: "[Redux] SetSubjectShifts"
 };
 
@@ -49,7 +51,7 @@ const initialState = {
     },
     subject: {
         all: [],
-        chosen: undefined
+        chosen: {}
     },
     shifts: {}
 };
@@ -89,11 +91,23 @@ export const reducer = persistReducer(
                 };
                 return newState;
             }
-            case types.SetSubject: {
+            case types.AddSubjectDone: {
                 const newState = {...state};
+                let newChosen = {...state.subject.chosen};
+                newChosen[action.payload.id] = action.payload;
                 newState.subject = {
                     ...state.subject,
-                    chosen: action.payload
+                    chosen: {...newChosen}
+                };
+                return newState;
+            }
+            case types.RemoveSubject: {
+                const newState = {...state};
+                let newChosen = {...state.subject.chosen};
+                delete newChosen[action.payload];
+                newState.subject = {
+                    ...state.subject,
+                    chosen: {...newChosen}
                 };
                 return newState;
             }
@@ -117,7 +131,9 @@ export const actions = {
     setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
     getDepartmentSubjects: (department) => ({ type: types.GetDepartmentSubjects, payload: department }),
     setSubjects: (subjects) => ({ type: types.SetSubjects, payload: subjects }),
-    setSubject: (subject) => ({ type: types.SetSubject, payload: subject }),
+    addSubject: (subject) => ({ type: types.AddSubject, payload: subject }),
+    addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
+    removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
     setShifts: (subject, shifts) => ({ type: types.SetShifts, payload: {subject, shifts} })
 };
 
@@ -133,23 +149,28 @@ export function* saga() {
         const {data} = yield api.getDepartmentSubjects(department);
         yield put(actions.setSubjects(data.classes));
     });
-    yield takeLatest(types.SetSubject, function* ({payload: subject}) {
-        const {data: {instances}} = yield api.getSubject(subject);
-        const {time: {chosen}} = yield select(state => state.redux);
-        let chosenComps = chosen.split("-");
-        let year = chosenComps[0];
-        let time = chosenComps[1];
-        let found = false;
-        let instance = undefined;
-        for (let index = 0; !found && index < instances.length; index++) {
-            if (instances[index].year == year && instances[index].period == time) {
-                instance = instances[index].id;
-                found = true;
+    yield takeLatest(types.AddSubject, function* ({payload: subject}) {
+        if (subject > 0) {
+            const {data} = yield api.getSubject(subject);
+            let subjectInfo = data;
+            let instances = data.instances;
+            const {time: {chosen}} = yield select(state => state.redux);
+            let chosenComps = chosen.split("-");
+            let year = chosenComps[0];
+            let time = chosenComps[1];
+            let found = false;
+            let instance = undefined;
+            for (let index = 0; !found && index < instances.length; index++) {
+                if (instances[index].year == year && instances[index].period == time) {
+                    instance = instances[index].id;
+                    found = true;
+                }
             }
-        }
-        if (instance) {
-            const {data} = yield api.getSubjectShifts(instance);
-            yield put(actions.setShifts(subject, data));
+            if (instance) {
+                yield put(actions.addSubjectDone(subjectInfo));
+                const {data} = yield api.getSubjectShifts(instance);
+                yield put(actions.setShifts(subject, data));
+            }
         }
     });
 }
