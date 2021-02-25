@@ -16,7 +16,8 @@ export const types = {
     SetDepartment: "[Redux] SetDepartment",
     GetDepartmentSubjects: "[Redux] GetDepartmentSubjects",
     SetSubjects: "[Redux] SetSubjects",
-    SetSubject: "[Redux] SetSubject"
+    SetSubject: "[Redux] SetSubject",
+    SetShifts: "[Redux] SetSubjectShifts"
 };
 
 const initialState = {
@@ -49,7 +50,8 @@ const initialState = {
     subject: {
         all: [],
         chosen: undefined
-    }
+    },
+    shifts: {}
 };
 
 export const reducer = persistReducer(
@@ -95,6 +97,12 @@ export const reducer = persistReducer(
                 };
                 return newState;
             }
+            case types.SetShifts: {
+                const newState = {...state};
+                newState.shifts = {}
+                newState.shifts[action.payload.subject] = action.payload.shifts;
+                return newState;
+            }
             default:
                 return state;
         }
@@ -109,7 +117,8 @@ export const actions = {
     setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
     getDepartmentSubjects: (department) => ({ type: types.GetDepartmentSubjects, payload: department }),
     setSubjects: (subjects) => ({ type: types.SetSubjects, payload: subjects }),
-    setSubject: (subject) => ({ type: types.SetSubject, payload: subject })
+    setSubject: (subject) => ({ type: types.SetSubject, payload: subject }),
+    setShifts: (subject, shifts) => ({ type: types.SetShifts, payload: {subject, shifts} })
 };
 
 export function* saga() {
@@ -123,5 +132,24 @@ export function* saga() {
     yield takeLatest(types.SetDepartment, function* ({payload: department}) {
         const {data} = yield api.getDepartmentSubjects(department);
         yield put(actions.setSubjects(data.classes));
+    });
+    yield takeLatest(types.SetSubject, function* ({payload: subject}) {
+        const {data: {instances}} = yield api.getSubject(subject);
+        const {time: {chosen}} = yield select(state => state.redux);
+        let chosenComps = chosen.split("-");
+        let year = chosenComps[0];
+        let time = chosenComps[1];
+        let found = false;
+        let instance = undefined;
+        for (let index = 0; !found && index < instances.length; index++) {
+            if (instances[index].year == year && instances[index].period == time) {
+                instance = instances[index].id;
+                found = true;
+            }
+        }
+        if (instance) {
+            const {data} = yield api.getSubjectShifts(instance);
+            yield put(actions.setShifts(subject, data));
+        }
     });
 }
