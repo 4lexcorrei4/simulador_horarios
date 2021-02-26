@@ -19,7 +19,7 @@ export const types = {
     AddSubject: "[Redux] AddSubject",
     AddSubjectDone: "[Redux] AddSubjectDone",
     RemoveSubject: "[Redux] RemoveSubject",
-    SetShifts: "[Redux] SetSubjectShifts"
+    AddShifts: "[Redux] AddShifts"
 };
 
 const initialState = {
@@ -109,11 +109,16 @@ export const reducer = persistReducer(
                     ...state.subject,
                     chosen: {...newChosen}
                 };
+                let newShifts = {...state.shifts};
+                delete newShifts[action.payload];
+                newState.shifts = {
+                    ...newShifts
+                };
                 return newState;
             }
-            case types.SetShifts: {
+            case types.AddShifts: {
                 const newState = {...state};
-                newState.shifts = {}
+                newState.shifts = {...state.shifts};
                 newState.shifts[action.payload.subject] = action.payload.shifts;
                 return newState;
             }
@@ -134,7 +139,7 @@ export const actions = {
     addSubject: (subject) => ({ type: types.AddSubject, payload: subject }),
     addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
     removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
-    setShifts: (subject, shifts) => ({ type: types.SetShifts, payload: {subject, shifts} })
+    addShifts: (subject, shifts) => ({ type: types.AddShifts, payload: {subject, shifts} })
 };
 
 export function* saga() {
@@ -169,7 +174,7 @@ export function* saga() {
             if (instance) {
                 yield put(actions.addSubjectDone(subjectInfo));
                 const {data} = yield api.getSubjectShifts(instance);
-                yield put(actions.setShifts(subject, data));
+                yield put(actions.addShifts(subject, data));
             }
         }
     });

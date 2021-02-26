@@ -1,0 +1,45 @@
+.timetable {
+    width: 100%;
+}
+
+.timetable tr:nth-child(2n+1) {
+    background-color: rgba(240, 240, 240, 1);
+}
+
+.timetable th {
+    border-right: 1px solid gray;
+}
+
+.timetable th:last-child {
+    border: none;
+}
+
+.timetable th:first-child,
+.timetable td:first-child {
+    width: 100px;
+    text-align: center;
+}
+
+.timetable .class {
+    text-align: center;
+}
+
+.timetable .class h3 {
+    margin-bottom: 0;
+}
+
+.timetable .class p {
+    margin-top: 5px;
+}
+
+.timetable .class.t {
+    background-color: rgba(210, 210, 210, 1);
+}
+
+.timetable .class.tp {
+    background-color: rgba(220, 220, 220, 1);
+}
+
+.timetable .class.p {
+    background-color: rgba(230, 230, 230, 1);
+}

@@ -76,9 +76,9 @@ const TopMenu = ({name, logo, times, time, departments, department, subjects, su
         <div id="subTopMenu">
             {
                 chosenSubjects.map(obj =>
-                    <div onClick={() => removeSubject(obj.id)}>
+                    <div title={obj.name}>
                         {obj.abbreviation}
-                        <span>X</span>
+                        <span onClick={() => removeSubject(obj.id)}>X</span>
                     </div>
                 )
             }
