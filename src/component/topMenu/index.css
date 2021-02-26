@@ -31,7 +31,7 @@
     display: flex;
     width: 100%;
     background-color: var(--sub-top-menu-bg-color);
-
+    min-height: 55px;
     justify-content: space-between;
     align-items: stretch;
 }
