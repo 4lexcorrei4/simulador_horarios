@@ -70,11 +70,20 @@
 .timetable .class.t {
     background-color: rgba(210, 210, 210, 1);
 }
+.timetable .class.to {
+    background-color: rgba(215, 215, 215, 1);
+}
 
 .timetable .class.tp {
     background-color: rgba(220, 220, 220, 1);
 }
+.timetable .class.tpo {
+    background-color: rgba(225, 225, 225, 1);
+}
 
 .timetable .class.p {
     background-color: rgba(230, 230, 230, 1);
+}
+.timetable .class.po {
+    background-color: rgba(235, 235, 235, 1);
 }

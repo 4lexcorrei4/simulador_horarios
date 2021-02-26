@@ -190,8 +190,11 @@ export function* saga() {
                     const shiftsInformation = data;
                     const shifts = {
                         t: {},
+                        to: {},
                         tp: {},
-                        p: {}
+                        tpo: {},
+                        p: {},
+                        po: {}
                     };
                     const {data: {building: {abbreviation}}} = yield api.getDepartmentSubjects(infoSubject.department.id);
                     shiftsInformation.map(shift => {
@@ -207,6 +210,8 @@ export function* saga() {
                             : shift.type_display.indexOf("Teórico") >= 0
                                 ? "T"
                                 : "P";
+                        if (shift.type_display.indexOf("Online") >= 0)
+                            type += "O";
                         infoShift.type = {
                             name: type,
                             title: shift.type_display
