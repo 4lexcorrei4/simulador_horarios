@@ -82,7 +82,7 @@ const Timetable = ({shifts, subjects}) => {
                                                 if (a.subject.abbreviation != b.subject.abbreviation)
                                                     return a.subject.abbreviation > b.subject.abbreviation;
                                                 else
-                                                    return a.number > b.number;
+                                                    return a.shift.number > b.shift.number;
                                             }
                                         ).map(shiftInfo =>
                                             <td rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name.toLowerCase()}`}>
