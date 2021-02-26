@@ -203,7 +203,7 @@ export function* saga() {
                         delete infoShift.url;
                         for (let index = 0; index < infoShift.instances.length; index++) {
                             infoShift.instances[index].duration = infoShift.instances[index].duration / 30;
-                            infoShift.instances[index].room = infoShift.instances[index].room ? abbreviation + " " + infoShift.instances[index].room : "-";
+                            infoShift.instances[index].room = infoShift.instances[index].room ? abbreviation + " " + infoShift.instances[index].room : undefined;
                         }
                         let type = shift.type_display.indexOf("Teórico-Prático") >= 0
                             ? "TP"
