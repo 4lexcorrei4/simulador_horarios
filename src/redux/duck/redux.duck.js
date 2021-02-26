@@ -173,8 +173,40 @@ export function* saga() {
             }
             if (instance) {
                 yield put(actions.addSubjectDone(subjectInfo));
+                let infoSubject = {...subjectInfo};
+                infoSubject.credits = infoSubject.credits / 2;
+                delete infoSubject.instances;
+                delete infoSubject.url;
                 const {data} = yield api.getSubjectShifts(instance);
-                yield put(actions.addShifts(subject, data));
+                let shifts = {
+                    t: {},
+                    tp: {},
+                    p: {}
+                };
+                data.map(shift => {
+                    let infoShift = {...shift};
+                    delete infoShift.teachers;
+                    delete infoShift.url;
+                    for (let index = 0; index < infoShift.instances.length; index++) {
+                        infoShift.instances[index].duration = infoShift.instances[index].duration / 30;
+                        infoShift.instances[index].room = infoShift.instances[index].room ? infoShift.instances[index] : "-";
+                    }
+                    let type = shift.type_display.indexOf("Teórico-Prático") >= 0
+                        ? "TP"
+                        : shift.type_display.indexOf("Teórico") >= 0
+                            ? "T"
+                            : "P";
+                    infoShift.type = {
+                        name: type,
+                        title: shift.type_display
+                    };
+                    delete infoShift.type_display;
+                    shifts[type.toLowerCase()][shift.number] = {
+                        subject: infoSubject,
+                        shift: infoShift
+                    };
+                });
+                yield put(actions.addShifts(subject, shifts));
             }
         }
     });

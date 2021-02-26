@@ -22,40 +22,42 @@ const Timetable = ({shifts, subjects}) => {
     const maxClasses = [1, 1, 1, 1, 1];
 
     Object.keys(shifts).map(subject => {
-        shifts[subject].map(shift => {
-            shift.instances.map(instance => {
+        Object.keys(shifts[subject]).map(type => {
+            Object.keys(shifts[subject][type]).map(number => {
+                    let shiftInfo = shifts[subject][type][number];
+                    shiftInfo.shift.instances.map(instance => {
+                        classes[hours.indexOf(instance.start)][instance.weekday].push({
+                            subject: shiftInfo.subject,
+                            shift: {
+                                ...instance,
+                                number: shiftInfo.shift.number,
+                                type: shiftInfo.shift.type
+                            }
+                        });
+                        for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration); hour++)
+                            filled[hour][instance.weekday]++;
+                        maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], classes[hours.indexOf(instance.start)][instance.weekday].length);
+                    });
+                }
+            )
+            /*shift.instances.map(instance => {
                 classes[hours.indexOf(instance.start)][instance.weekday].push({
                     id: shift.id,
-                    subject: {
-                        short: subjects[subject].abbreviation,
-                        name: subjects[subject].name
-                    },
+                    subject: shift.subject,
                     number: shift.number,
-                    type: {
-                        name: shift.type_display.indexOf("Teórico-Prático") >= 0
-                            ? "TP"
-                            : shift.type_display.indexOf("Teórico") >= 0
-                                ? "T"
-                                : "P",
-                        title: shift.type_display
-                    },
-                    class: shift.type_display.indexOf("Teórico-Prático") >= 0
-                        ? "tp"
-                        : shift.type_display.indexOf("Teórico") >= 0
-                            ? "t"
-                            : "p",
+                    type: shift.type,
+                    class: shift.type.toLowerCase(),
                     duration: instance.duration / 30,
                     room: instance.room ? instance.room : "-"
                 });
                 for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration / 30); hour++)
                     filled[hour][instance.weekday]++;
                 maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], classes[hours.indexOf(instance.start)][instance.weekday].length);
-            });
+            });*/
         });
     });
 
-    console.log(classes)
-    console.log(maxClasses)
+    console.log(classes);
 
     return <>
         <table className="timetable">
@@ -77,15 +79,15 @@ const Timetable = ({shifts, subjects}) => {
                                     filled[hours.indexOf(hour)][day]
                                         ? classes[hours.indexOf(hour)][day].sort(
                                             (a, b) => {
-                                                if (a.subject.short != b.subject.short)
-                                                    return a.subject.short > b.subject.short;
+                                                if (a.subject.abbreviation != b.subject.abbreviation)
+                                                    return a.subject.abbreviation > b.subject.abbreviation;
                                                 else
                                                     return a.number > b.number;
                                             }
-                                        ).map(shift =>
-                                            <td rowSpan={shift.duration} className={`class ${shift.class}`}>
-                                                <h3 title={shift.subject.name}>{shift.subject.short}</h3>
-                                                <p><span title={shift.type.title + " " + shift.number}>{shift.type.name} {shift.number}</span><br />{shift.room}</p>
+                                        ).map(shiftInfo =>
+                                            <td rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name.toLowerCase()}`}>
+                                                <h3 title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</h3>
+                                                <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
                                         : <td colSpan={maxClasses[day] - filled[hours.indexOf(hour)][day]}></td>
