@@ -15,7 +15,7 @@ const TopMenu = ({name, logo, times, time, departments, department, subjects, su
     };
 
     const chooseSubject = (subject) => {
-        dispatch(actions.addSubject(subject));
+        dispatch(actions.addOrUpdateSubjects(subject));
     };
 
     const removeSubject = (subject) => {
@@ -38,13 +38,7 @@ const TopMenu = ({name, logo, times, time, departments, department, subjects, su
                     <option disabled selected>Escolher Período Letivo</option>
                     {
                         times.map(year =>
-                            <optgroup label={year.year}>
-                                {
-                                    year.times.map(time =>
-                                        <option value={year.year + "-" + time.id}>{time.name}</option>
-                                    )
-                                }
-                            </optgroup>
+                            <option value={year}>{year}</option>
                         )
                     }
                 </select>

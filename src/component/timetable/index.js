@@ -57,17 +57,17 @@ const Timetable = ({shifts, subjects}) => {
         });
     });
 
-    console.log(classes);
-
     return <>
         <table className="timetable">
             <thead>
-                <th>Hora</th>
-                <th colSpan={maxClasses[0]}>2ª</th>
-                <th colSpan={maxClasses[1]}>3ª</th>
-                <th colSpan={maxClasses[2]}>4ª</th>
-                <th colSpan={maxClasses[3]}>5ª</th>
-                <th colSpan={maxClasses[4]}>6ª</th>
+                <tr>
+                    <th>Hora</th>
+                    <th colSpan={maxClasses[0]}>2ª</th>
+                    <th colSpan={maxClasses[1]}>3ª</th>
+                    <th colSpan={maxClasses[2]}>4ª</th>
+                    <th colSpan={maxClasses[3]}>5ª</th>
+                    <th colSpan={maxClasses[4]}>6ª</th>
+                </tr>
             </thead>
             <tbody>
             {
