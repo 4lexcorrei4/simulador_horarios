@@ -29,12 +29,19 @@
 
 #subTopMenu {
     display: flex;
-    width: calc(100% - 20px);
+    width: 100%;
     background-color: var(--sub-top-menu-bg-color);
+
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#subTopMenu #subjects {
+    display: flex;
     padding: 10px;
 }
 
-#subTopMenu div {
+#subTopMenu #subjects div {
     background-color: var(--sub-top-menu-subject-bg-color);
     padding: 5px 10px;
     margin: 0 5px;
@@ -44,7 +51,7 @@
     font-weight: bold;
 }
 
-#subTopMenu div span {
+#subTopMenu #subjects div span {
     font-size: 15px;
     margin-left: 5px;
     background-color: var(--sub-top-menu-subject-cross-bg-color);
@@ -55,4 +62,18 @@
     width: 25px;
     height: 25px;
     cursor: pointer;
+}
+
+#subTopMenu #update {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    background-color: var(--sub-top-menu-bg-color);
+    padding: 0 20px;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+#subTopMenu #update:hover {
+    background-color: var(--sub-top-menu-subject-bg-color);
 }
