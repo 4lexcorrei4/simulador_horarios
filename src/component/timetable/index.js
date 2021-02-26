@@ -36,9 +36,10 @@ const Timetable = ({shifts, subjects}) => {
                                 type: shiftInfo.shift.type
                             }
                         });
-                        for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration); hour++)
+                        for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration); hour++) {
                             filled[hour][instance.weekday]++;
-                        maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], classes[hours.indexOf(instance.start)][instance.weekday].length);
+                            maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], filled[hour][instance.weekday]);
+                        }
                     });
                 }
             )
