@@ -9,3 +9,8 @@
     --sub-top-menu-subject-bg-color: rgba(152, 202, 216, 0.5);
     --sub-top-menu-subject-cross-bg-color: rgba(255, 255, 255, 0.5);
 }
+
+#content {
+    overflow-y: auto;
+    height: calc(100vh - 125px);
+}

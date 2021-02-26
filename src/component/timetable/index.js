@@ -72,7 +72,16 @@ const Timetable = ({shifts, subjects}) => {
             <tbody>
             {
                 hours.map(hour => <tr>
-                    <td>{parseInt(hour/60) < 10 ? "0" + parseInt(hour/60) : parseInt(hour/60)}:{(hour/60).toString().indexOf(".5") > 0 ? "30" : "00"}</td>
+                    <td>{
+                        (hour/60).toString().indexOf(".5") == -1
+                            ? parseInt(hour/60) < 10
+                                ? "0" + parseInt(hour/60)
+                                : parseInt(hour/60)
+                            : parseInt(hour/60)+1 < 10
+                                ? "0" + (parseInt(hour/60)+1)
+                                : (parseInt(hour/60)+1)
+
+                    }:00</td>
                         {
                             [0, 1, 2, 3, 4].map(day => <>
                                 {

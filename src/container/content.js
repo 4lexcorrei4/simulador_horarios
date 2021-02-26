@@ -6,7 +6,7 @@ const ContentContainer = () => {
     const shifts = useSelector(state => state.redux.shifts);
     const subjects = useSelector(state => state.redux.subject.chosen);
 
-    return <div>
+    return <div id="content">
         <Timetable shifts={shifts} subjects={subjects} />
     </div>
 };

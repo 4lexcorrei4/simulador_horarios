@@ -1,9 +1,25 @@
 .timetable {
     width: 100%;
+    border-collapse: collapse;
 }
 
-.timetable tr:nth-child(2n+1) {
-    background-color: rgba(240, 240, 240, 1);
+.timetable thead {
+    background-color: rgba(200, 200, 200, 0.3);
+    border-bottom: 1px solid gray;
+}
+
+.timetable tbody tr:nth-child(4n+1),
+.timetable tbody tr:nth-child(4n+2) {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.timetable tbody tr:nth-child(4n+3),
+.timetable tbody tr:nth-child(4n+4) {
+    background-color: rgba(245, 245, 245, 1);
+}
+
+.timetable tbody tr td:first-child {
+    font-size: 12px;
 }
 
 .timetable th {
@@ -14,22 +30,41 @@
     border: none;
 }
 
-.timetable th:first-child,
-.timetable td:first-child {
+.timetable th:first-child {
     width: 100px;
-    text-align: center;
+}
+
+.timetable tbody tr:nth-child(4n+1) td:first-child,
+.timetable tbody tr:nth-child(4n+3) td:first-child {
+    text-align: left;
+    padding-left: 5px;
+}
+
+.timetable tbody tr:nth-child(4n+2) td:first-child,
+.timetable tbody tr:nth-child(4n+4) td:first-child {
+    text-align: right;
+    padding-right: 5px;
+}
+
+.timetable tbody td {
+    border-right: 1px solid rgba(150, 150, 150, 0.5);
+}
+
+.timetable tbody td:last-child {
+    border-right: none;
 }
 
 .timetable .class {
     text-align: center;
+    border: 1px solid rgba(150, 150, 150, 0.5);
 }
 
 .timetable .class h3 {
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .timetable .class p {
-    margin-top: 5px;
+    margin: 0;
 }
 
 .timetable .class.t {
