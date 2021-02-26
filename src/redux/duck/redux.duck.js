@@ -19,7 +19,8 @@ export const types = {
     AddOrUpdateSubjects: "[Redux] AddOrUpdateSubjects",
     AddSubjectDone: "[Redux] AddSubjectDone",
     RemoveSubject: "[Redux] RemoveSubject",
-    AddOrUpdateShifts: "[Redux] AddOrUpdateShifts"
+    AddOrUpdateShifts: "[Redux] AddOrUpdateShifts",
+    Nothing: "[Redux] Nothing",
 };
 
 const initialState = {
@@ -35,7 +36,8 @@ const initialState = {
         all: [],
         chosen: {}
     },
-    shifts: {}
+    shifts: {},
+    loading: true
 };
 
 export const reducer = persistReducer(
@@ -50,12 +52,18 @@ export const reducer = persistReducer(
                 };
                 return newState;
             }
+            case types.GetDepartments: {
+                const newState = {...state};
+                newState.loading = true;
+                return newState;
+            }
             case types.SetDepartments: {
                 const newState = {...state};
                 newState.department = {
                     ...state.department,
                     all: action.payload
                 };
+                newState.loading = false;
                 return newState;
             }
             case types.SetDepartment: {
@@ -66,12 +74,23 @@ export const reducer = persistReducer(
                 };
                 return newState;
             }
+            case types.GetDepartmentSubjects: {
+                const newState = {...state};
+                newState.loading = true;
+                return newState;
+            }
             case types.SetSubjects: {
                 const newState = {...state};
                 newState.subject = {
                     ...state.subject,
                     all: action.payload
                 };
+                newState.loading = false;
+                return newState;
+            }
+            case types.AddOrUpdateSubjects: {
+                const newState = {...state};
+                newState.loading = true;
                 return newState;
             }
             case types.AddSubjectDone: {
@@ -101,10 +120,13 @@ export const reducer = persistReducer(
                 const newState = {...state};
                 newState.shifts = {...state.shifts};
                 newState.shifts[action.payload.subject] = action.payload.shifts;
+                newState.loading = false;
                 return newState;
             }
             default:
-                return state;
+                const newState = {...state};
+                newState.loading = false;
+                return newState;
         }
     }
 );
@@ -120,7 +142,8 @@ export const actions = {
     addOrUpdateSubjects: (subjects) => ({ type: types.AddOrUpdateSubjects, payload: subjects }),
     addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
     removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
-    addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} })
+    addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} }),
+    nothing: () => ({ type: types.Nothing })
 };
 
 export function* saga() {
@@ -141,6 +164,7 @@ export function* saga() {
     });
     yield takeLatest(types.AddOrUpdateSubjects, function* ({payload: subjects}) {
         let index = 0;
+        let added = 0;
         do {
             let subject = Array.isArray(subjects) ? subjects[index++] : subjects;
             if (subject > 0) {
@@ -194,10 +218,13 @@ export function* saga() {
                         };
                     });
                     yield put(actions.addOrUpdateShifts(subject, shifts));
+                    added++;
                 } else {
                     yield put(actions.removeSubject(subject));
                 }
             }
         } while (Array.isArray(subjects) && index <= subjects.length);
+        if (added == 0)
+            yield put(actions.nothing());
     });
 }

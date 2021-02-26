@@ -1,5 +1,7 @@
 import React from "react";
 import "./index.css";
+import {useSelector} from "react-redux";
+import Loader from "../loader";
 
 const Timetable = ({shifts, subjects}) => {
     const hours = [];
@@ -40,20 +42,6 @@ const Timetable = ({shifts, subjects}) => {
                     });
                 }
             )
-            /*shift.instances.map(instance => {
-                classes[hours.indexOf(instance.start)][instance.weekday].push({
-                    id: shift.id,
-                    subject: shift.subject,
-                    number: shift.number,
-                    type: shift.type,
-                    class: shift.type.toLowerCase(),
-                    duration: instance.duration / 30,
-                    room: instance.room ? instance.room : "-"
-                });
-                for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration / 30); hour++)
-                    filled[hour][instance.weekday]++;
-                maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], classes[hours.indexOf(instance.start)][instance.weekday].length);
-            });*/
         });
     });
 
@@ -95,7 +83,7 @@ const Timetable = ({shifts, subjects}) => {
                                             }
                                         ).map(shiftInfo =>
                                             <td rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name.toLowerCase()}`}>
-                                                <h3 title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</h3>
+                                                <h3><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></h3>
                                                 <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
