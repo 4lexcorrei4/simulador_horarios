@@ -57,6 +57,7 @@
 .timetable .class {
     text-align: center;
     border: 1px solid rgba(150, 150, 150, 0.5);
+    transition: background-color 0.5s;
 }
 
 .timetable .class h3 {
@@ -86,4 +87,8 @@
 }
 .timetable .class.po {
     background-color: rgba(235, 235, 235, 1);
+}
+
+.timetable .class.hover {
+    background-color: rgba(150, 150, 150, 1);
 }
