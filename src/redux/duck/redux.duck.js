@@ -120,7 +120,6 @@ export const reducer = persistReducer(
                 const newState = {...state};
                 newState.shifts = {...state.shifts};
                 newState.shifts[action.payload.subject] = action.payload.shifts;
-                newState.loading = false;
                 return newState;
             }
             default:
@@ -229,7 +228,6 @@ export function* saga() {
                 }
             }
         } while (Array.isArray(subjects) && index <= subjects.length);
-        if (added == 0)
-            yield put(actions.nothing());
+        yield put(actions.nothing());
     });
 }
