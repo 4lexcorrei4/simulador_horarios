@@ -10,7 +10,8 @@ import * as api from "../api/api";
 
 export const types = {
     Init: "[Redux] Init",
-    SetTime: "[Redux] SetTime",
+    SetYears: "[Redux] SetYears",
+    ChangeYear: "[Redux] ChangeYear",
     GetDepartments: "[Redux] GetDepartments",
     SetDepartments: "[Redux] SetDepartments",
     SetDepartment: "[Redux] SetDepartment",
@@ -24,9 +25,9 @@ export const types = {
 };
 
 const initialState = {
-    time: {
-        all: [2021, 2020, 2019, 2018, 2017, 2016, 2015],
-        chosen: 2021
+    year: {
+        all: [],
+        chosen: undefined
     },
     department: {
         all: [],
@@ -44,12 +45,14 @@ export const reducer = persistReducer(
     {storage, key: "simulador-horarios"},
     (state = initialState, action) => {
         switch (action.type) {
-            case types.SetTime: {
+            case types.SetYears: {
                 const newState = {...state};
-                newState.time = {
-                    ...state.time,
-                    chosen: action.payload
-                };
+                newState.year = action.payload;
+                return newState;
+            }
+            case types.ChangeYear: {
+                const newState = {...state};
+                newState.year.chosen = action.payload;
                 return newState;
             }
             case types.GetDepartments: {
@@ -132,7 +135,8 @@ export const reducer = persistReducer(
 
 export const actions = {
     init: () => ({ type: types.Init }),
-    setTime: (time) => ({ type: types.SetTime, payload: time }),
+    setYears: (years) => ({ type: types.SetYears, payload: years }),
+    changeYear: (year) => ({ type: types.ChangeYear, payload: year }),
     getDepartments: () => ({ type: types.GetDepartments }),
     setDepartments: (departments) => ({ type: types.SetDepartments, payload: departments }),
     setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
@@ -147,6 +151,13 @@ export const actions = {
 
 export function* saga() {
     yield takeLatest(types.Init, function* () {
+        const years = {
+            all: [],
+            chosen: new Date().getMonth() >= 9 ? new Date().getFullYear() + 1 : new Date().getFullYear()
+        }
+        for (let year = years.chosen; year >= 2015; year--)
+            years.all.push(year);
+        yield put(actions.setYears(years));
         yield put(actions.getDepartments());
     });
     yield takeLatest(types.GetDepartments, function* () {
@@ -157,7 +168,7 @@ export function* saga() {
         const {data} = yield api.getDepartmentSubjects(department);
         yield put(actions.setSubjects(data.classes));
     });
-    yield takeLatest(types.SetTime, function* ({payload: time}) {
+    yield takeLatest(types.ChangeYear, function* ({payload: year}) {
         const subjects = yield select(state => state.redux.subject.chosen);
         yield put(actions.addOrUpdateSubjects(Object.keys(subjects)));
     });

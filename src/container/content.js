@@ -4,10 +4,9 @@ import {useSelector} from "react-redux";
 
 const ContentContainer = () => {
     const shifts = useSelector(state => state.redux.shifts);
-    const subjects = useSelector(state => state.redux.subject.chosen);
 
     return <div id="content">
-        <Timetable shifts={shifts} subjects={subjects} />
+        <Timetable shifts={shifts} />
     </div>
 };
 

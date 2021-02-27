@@ -3,13 +3,11 @@ import "./index.css";
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../../redux/duck/redux.duck";
 
-const TopMenu = ({name, logo, times, time, departments, department, subjects, subject}) => {
+const TopMenu = ({name, logo, years, year, departments, department, subjects, subject}) => {
     const dispatch = useDispatch();
 
-    const year = useSelector(state => state.redux.time.chosen);
-
-    const chooseTime = (time) => {
-        dispatch(actions.setTime(time));
+    const changeYear = (year) => {
+        dispatch(actions.changeYear(year));
     };
 
     const chooseDepartment = (department) => {
@@ -34,12 +32,12 @@ const TopMenu = ({name, logo, times, time, departments, department, subjects, su
             </span>
             <span>
                 <select
-                    value={time}
-                    onChange={(event) => chooseTime(event.target.value)}
+                    value={year}
+                    onChange={(event) => changeYear(event.target.value)}
                 >
-                    <option disabled selected>Escolher Período Letivo</option>
+                    <option disabled selected>Escolher Ano Letivo</option>
                     {
-                        times.map(year =>
+                        years.map(year =>
                             <option value={year}>{year}</option>
                         )
                     }
@@ -80,7 +78,7 @@ const TopMenu = ({name, logo, times, time, departments, department, subjects, su
                     )
                 }
             </div>
-            <div id="update" onClick={() => chooseTime(year)}>&#8634; Atualizar</div>
+            <div id="update" onClick={() => changeYear(year)}>&#8634; Atualizar</div>
         </div>
     </>
 };

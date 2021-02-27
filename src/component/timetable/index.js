@@ -3,7 +3,7 @@ import "./index.css";
 import {useSelector} from "react-redux";
 import Loader from "../loader";
 
-const Timetable = ({shifts, subjects}) => {
+const Timetable = ({shifts}) => {
     const hours = [];
     for (let current = 8; current <= 23.5; current = current + 0.5)
         hours.push(current * 60);
