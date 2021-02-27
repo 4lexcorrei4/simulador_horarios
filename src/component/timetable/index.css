@@ -56,8 +56,8 @@
 
 .timetable .class {
     text-align: center;
-    border: 1px solid rgba(150, 150, 150, 0.5);
-    transition: background-color 0.5s;
+    border: 1px solid rgba(100, 100, 100, 0.5);
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .timetable .class h3 {
@@ -90,5 +90,15 @@
 }
 
 .timetable .class.hover {
-    background-color: rgba(150, 150, 150, 1);
+    background-color: rgba(130, 130, 130, 1);
+    color: #fff;
+}
+
+.timetable .class .save {
+    position: absolute;
+    margin-top: 0;
+    margin-left: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
 }

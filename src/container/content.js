@@ -4,6 +4,8 @@ import {useSelector} from "react-redux";
 
 const ContentContainer = () => {
     const shifts = useSelector(state => state.redux.shifts);
+    const chosenClasses = useSelector(state => state.redux.classes);
+    const view = useSelector(state => state.redux.view);
 
     const hours = [];
     for (let current = 8; current <= 23.5; current = current + 0.5)
@@ -24,10 +26,22 @@ const ContentContainer = () => {
 
     const maxClasses = [1, 1, 1, 1, 1];
 
-    Object.keys(shifts).map(subject => {
-        Object.keys(shifts[subject]).map(type => {
-            Object.keys(shifts[subject][type]).map(number => {
-                    let shiftInfo = shifts[subject][type][number];
+    let showShifts = {};
+    if (view == "classes")
+        chosenClasses.map(obj => {
+            const info = obj.split("-");
+            if (!showShifts[info[0]]) {showShifts[info[0]] = {}}
+            if (!showShifts[info[0]][info[1]]) {showShifts[info[0]][info[1]] = {}}
+            if (!showShifts[info[0]][info[1]][info[2]]) {showShifts[info[0]][info[1]][info[2]] = {}}
+            showShifts[info[0]][info[1]][info[2]] = shifts[info[0]][info[1]][info[2]];
+        });
+    else
+        showShifts = shifts;
+
+    Object.keys(showShifts).map(subject => {
+        Object.keys(showShifts[subject]).map(type => {
+            Object.keys(showShifts[subject][type]).map(number => {
+                    let shiftInfo = showShifts[subject][type][number];
                     shiftInfo.shift.instances.map(instance => {
                         classes[hours.indexOf(instance.start)][instance.weekday].push({
                             subject: shiftInfo.subject,
@@ -53,6 +67,8 @@ const ContentContainer = () => {
             hours={hours}
             classes={classes}
             filled={filled}
+            showSave={view ? false : true}
+            chosenClasses={chosenClasses}
         />
     </div>
 };

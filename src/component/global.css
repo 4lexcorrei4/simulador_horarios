@@ -6,6 +6,8 @@
     --top-menu-bg-color-hover: rgba(32, 82, 96, 0.8);
     --top-menu-color: rgba(250, 250, 250, 1);
     --sub-top-menu-bg-color: rgba(172, 222, 236, 0.5);
+    --sub-top-menu-option-bg-color: rgba(132, 182, 196, 0.5);
+    --sub-top-menu-subject-bg-color-hover: rgba(92, 142, 156, 0.5);
     --sub-top-menu-subject-bg-color: rgba(152, 202, 216, 0.5);
     --sub-top-menu-subject-cross-bg-color: rgba(255, 255, 255, 0.5);
 }

@@ -21,10 +21,14 @@ export const types = {
     AddSubjectDone: "[Redux] AddSubjectDone",
     RemoveSubject: "[Redux] RemoveSubject",
     AddOrUpdateShifts: "[Redux] AddOrUpdateShifts",
+    SaveClass: "[Redux] SaveClass",
+    RemoveClass: "[Redux] RemoveClass",
+    SetView: "[Redux] SetView",
     Nothing: "[Redux] Nothing",
 };
 
 const initialState = {
+    view: undefined,
     year: {
         all: [],
         chosen: undefined
@@ -38,6 +42,7 @@ const initialState = {
         chosen: {}
     },
     shifts: {},
+    classes: [],
     loading: true
 };
 
@@ -125,6 +130,25 @@ export const reducer = persistReducer(
                 newState.shifts[action.payload.subject] = action.payload.shifts;
                 return newState;
             }
+            case types.SaveClass: {
+                const newState = {...state};
+                const newClasses = [...state.classes];
+                newClasses.push(action.payload);
+                newState.classes = newClasses;
+                return newState;
+            }
+            case types.RemoveClass: {
+                const newState = {...state};
+                const newClasses = [...state.classes];
+                newClasses.splice(state.classes.indexOf(action.payload), 1);
+                newState.classes = newClasses;
+                return newState;
+            }
+            case types.SetView: {
+                const newState = {...state};
+                newState.view = action.payload;
+                return newState;
+            }
             default:
                 const newState = {...state};
                 newState.loading = false;
@@ -146,6 +170,9 @@ export const actions = {
     addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
     removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
     addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} }),
+    addClass: (id) => ({ type: types.SaveClass, payload: id }),
+    removeClass: (id) => ({ type: types.RemoveClass, payload: id }),
+    setView: (view) => ({ type: types.SetView, payload: view }),
     nothing: () => ({ type: types.Nothing })
 };
 

@@ -6,6 +6,8 @@ import {actions} from "../../redux/duck/redux.duck";
 const TopMenu = ({name, logo, years, year, departments, department, subjects, subject}) => {
     const dispatch = useDispatch();
 
+    const view = useSelector(state => state.redux.view);
+
     const changeYear = (year) => {
         dispatch(actions.changeYear(year));
     };
@@ -20,6 +22,10 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
 
     const removeSubject = (subject) => {
         dispatch(actions.removeSubject(subject));
+    };
+
+    const setView = (view) => {
+        dispatch(actions.setView(view));
     };
 
     const chosenSubjects = Object.values(subject).sort((a, b) => {return a.abbreviation > b.abbreviation});
@@ -78,7 +84,14 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                     )
                 }
             </div>
-            <div id="update" onClick={() => changeYear(year)}>&#8634; Atualizar</div>
+            <div id="menu">
+                <div className="option" id="update" onClick={() => changeYear(year)}><span>&#8634; Atualizar</span></div>
+                <div id="view">
+                    <span className={view == "subjects" ? "active" : ""} onClick={() => setView("subjects")}>Turnos</span>
+                    <span className={view == undefined ? "active" : ""} onClick={() => setView(undefined)}>Escolher</span>
+                    <span className={view == "classes" ? "active" : ""} onClick={() => setView("classes")}>Escolhido</span>
+                </div>
+            </div>
         </div>
     </>
 };

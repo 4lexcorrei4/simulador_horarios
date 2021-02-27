@@ -64,16 +64,53 @@
     cursor: pointer;
 }
 
-#subTopMenu #update {
+#subTopMenu #menu {
+    display: flex;
+    align-items: stretch;
+    background-color: var(--sub-top-menu-bg-color);
+    padding: 10px;
+}
+
+#subTopMenu #menu div {
+    display: flex;
+    align-items: stretch;
+    font-weight: bold;
+    background-color: var(--sub-top-menu-option-bg-color);
+    cursor: pointer;
+    transition: background-color 0.5s;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+#subTopMenu #menu #update {
+    padding: 0 20px;
     display: flex;
     align-items: center;
-    font-weight: bold;
-    background-color: var(--sub-top-menu-bg-color);
-    padding: 0 20px;
-    cursor: pointer;
+}
+
+#subTopMenu #menu div:last-child {
+    margin-right: 0;
+}
+
+#subTopMenu #menu .option:hover,
+#subTopMenu #view span:hover,
+#subTopMenu #view span.active {
+    background-color: var(--sub-top-menu-subject-bg-color-hover);
+}
+
+#subTopMenu #view span {
+    padding: 0 10px;
+    border-right: 1px solid gray;
+    display: flex;
+    align-items: center;
     transition: background-color 0.5s;
 }
 
-#subTopMenu #update:hover {
-    background-color: var(--sub-top-menu-subject-bg-color);
+#subTopMenu #view span:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+#subTopMenu #view span:last-child {
+    border-right: none;
+    border-radius: 0 10px 10px 0;
 }

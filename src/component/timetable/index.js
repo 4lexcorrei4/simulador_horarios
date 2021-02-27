@@ -1,8 +1,12 @@
 import React from "react";
 import "./index.css";
 import $ from "jquery";
+import {actions} from "../../redux/duck/redux.duck";
+import {useDispatch} from "react-redux";
 
-const Timetable = ({maxClasses, hours, classes, filled}) => {
+const Timetable = ({maxClasses, hours, classes, filled, showSave, chosenClasses}) => {
+    const dispatch = useDispatch();
+
     const onMouseOver = (id) => {
         $("." + id).addClass("hover");
     };
@@ -11,8 +15,15 @@ const Timetable = ({maxClasses, hours, classes, filled}) => {
         $("." + id).removeClass("hover");
     };
 
+    const saveOrRemoveClass = (id) => {
+        if (chosenClasses.indexOf(id) < 0)
+            dispatch(actions.addClass(id));
+        else
+            dispatch(actions.removeClass(id));
+    };
+
     return <>
-        <table className="timetable">
+        <table id="timetable" className="timetable">
             <thead>
                 <tr>
                     <th>Hora</th>
@@ -53,6 +64,15 @@ const Timetable = ({maxClasses, hours, classes, filled}) => {
                                                 onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}
                                                 onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}
                                             >
+                                                {
+                                                    showSave
+                                                        ? chosenClasses.indexOf(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number) < 0
+                                                            ? <div className="save" title="Guardar"
+                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}>&#9733;</div>
+                                                            : <div className="save" title="Remover"
+                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}>X</div>
+                                                        : <></>
+                                                }
                                                 <h3><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></h3>
                                                 <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
                                             </td>
