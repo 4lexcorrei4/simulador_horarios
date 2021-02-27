@@ -174,14 +174,13 @@ export function* saga() {
     });
     yield takeLatest(types.AddOrUpdateSubjects, function* ({payload: subjects}) {
         let index = 0;
-        let added = 0;
         do {
             let subject = Array.isArray(subjects) ? subjects[index++] : subjects;
             if (subject > 0) {
                 const {data} = yield api.getSubject(subject);
                 let subjectInfo = data;
                 let instances = data.instances;
-                const year = yield select(state => state.redux.time.chosen);
+                const year = yield select(state => state.redux.year.chosen);
                 let found = false;
                 let instance = undefined;
                 for (let index = 0; !found && index < instances.length; index++) {
@@ -233,7 +232,6 @@ export function* saga() {
                         };
                     });
                     yield put(actions.addOrUpdateShifts(subject, shifts));
-                    added++;
                 } else {
                     yield put(actions.removeSubject(subject));
                 }
