@@ -3,6 +3,7 @@ import "./index.css";
 import $ from "jquery";
 import {actions} from "../../redux/duck/redux.duck";
 import {useDispatch} from "react-redux";
+import ElementTD from "../elementTd";
 
 const Timetable = ({maxClasses, hours, classes, filled, showSave, chosenClasses}) => {
     const dispatch = useDispatch();
@@ -77,11 +78,11 @@ const Timetable = ({maxClasses, hours, classes, filled, showSave, chosenClasses}
                                                 <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
-                                        : <td colSpan={maxClasses[day] - filled[hours.indexOf(hour)][day]}></td>
+                                        : <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
                                 }
                                 {
                                     maxClasses[day] > filled[hours.indexOf(hour)][day] && filled[hours.indexOf(hour)][day]
-                                        ? <td colSpan={maxClasses[day] - filled[hours.indexOf(hour)][day]}></td>
+                                        ? <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
                                         : <></>
                                 }
                                 </>

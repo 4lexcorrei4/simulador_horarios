@@ -1,4 +1,5 @@
 .timetable {
+    position: relative;
     width: 100%;
     border-collapse: collapse;
 }
@@ -46,12 +47,8 @@
     padding-right: 5px;
 }
 
-.timetable tbody td {
+.timetable tbody tr td:first-child {
     border-right: 1px solid rgba(150, 150, 150, 0.5);
-}
-
-.timetable tbody td:last-child {
-    border-right: none;
 }
 
 .timetable .class {

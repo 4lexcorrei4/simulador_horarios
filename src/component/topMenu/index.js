@@ -60,10 +60,9 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                     }
                 </select>
                 <select
-                    disabled={chosenSubjects.length == 5 ? true : ""}
                     onChange={(event) => chooseSubject(event.target.value)}
                 >
-                    <option value={-1} selected>{chosenSubjects.length < 5 ? "Adicionar Cadeira" : "Remover Cadeira para Adicionar Outra"}</option>
+                    <option value={-1} selected>Adicionar Cadeira</option>
                     {
                         subjects.map(option =>
                             subject[option.id]
@@ -90,7 +89,7 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                 <div id="view">
                     <span className={view == "subjects" ? "active" : ""} onClick={() => setView("subjects")}>Turnos</span>
                     <span className={view == undefined ? "active" : ""} onClick={() => setView(undefined)}>Escolher</span>
-                    <span className={view == "classes" ? "active" : ""} onClick={() => setView("classes")}>Escolhido</span>
+                    <span className={view == "classes" ? "active" : ""} onClick={() => setView("classes")}>Escolhidos</span>
                 </div>
             </div>
         </div>
