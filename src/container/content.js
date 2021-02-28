@@ -26,17 +26,7 @@ const ContentContainer = () => {
 
     const maxClasses = [1, 1, 1, 1, 1];
 
-    let showShifts = {};
-    if (view == "classes")
-        chosenClasses.map(obj => {
-            const info = obj.split("-");
-            if (!showShifts[info[0]]) {showShifts[info[0]] = {}}
-            if (!showShifts[info[0]][info[1]]) {showShifts[info[0]][info[1]] = {}}
-            if (!showShifts[info[0]][info[1]][info[2]]) {showShifts[info[0]][info[1]][info[2]] = {}}
-            showShifts[info[0]][info[1]][info[2]] = shifts[info[0]][info[1]][info[2]];
-        });
-    else
-        showShifts = shifts;
+    let showShifts = view == "chosen" ? chosenClasses : shifts;
 
     Object.keys(showShifts).map(subject => {
         Object.keys(showShifts[subject]).map(type => {
@@ -67,7 +57,6 @@ const ContentContainer = () => {
             hours={hours}
             classes={classes}
             filled={filled}
-            showSave={view ? false : true}
             chosenClasses={chosenClasses}
         />
     </div>

@@ -10,6 +10,7 @@ import * as api from "../api/api";
 
 export const types = {
     Init: "[Redux] Init",
+    Set: "[Redux] Set",
     SetYears: "[Redux] SetYears",
     ChangeYear: "[Redux] ChangeYear",
     GetDepartments: "[Redux] GetDepartments",
@@ -42,7 +43,7 @@ const initialState = {
         chosen: {}
     },
     shifts: {},
-    classes: [],
+    classes: {},
     loading: true
 };
 
@@ -50,6 +51,11 @@ export const reducer = persistReducer(
     {storage, key: "simulador-horarios"},
     (state = initialState, action) => {
         switch (action.type) {
+            case types.Set: {
+                const newState = {...state};
+                newState[action.payload.name] = action.payload.content;
+                return newState;
+            }
             case types.SetYears: {
                 const newState = {...state};
                 newState.year = action.payload;
@@ -132,15 +138,23 @@ export const reducer = persistReducer(
             }
             case types.SaveClass: {
                 const newState = {...state};
-                const newClasses = [...state.classes];
-                newClasses.push(action.payload);
+                const newClasses = {...state.classes};
+                if (!newClasses[action.payload.subject])
+                    newClasses[action.payload.subject] = {};
+                if (!newClasses[action.payload.subject][action.payload.type])
+                    newClasses[action.payload.subject][action.payload.type] = {};
+                newClasses[action.payload.subject].number = newClasses[action.payload.subject].number ? newClasses[action.payload.subject].number + 1 : 1;
+                newClasses[action.payload.subject][action.payload.type][action.payload.number] = {...state.shifts[action.payload.subject][action.payload.type][action.payload.number]};
                 newState.classes = newClasses;
                 return newState;
             }
             case types.RemoveClass: {
                 const newState = {...state};
-                const newClasses = [...state.classes];
-                newClasses.splice(state.classes.indexOf(action.payload), 1);
+                const newClasses = {...state.classes};
+                delete newClasses[action.payload.subject][action.payload.type][action.payload.number];
+                newClasses[action.payload.subject].count--;
+                if (newClasses[action.payload.subject].count <= 0)
+                    delete newClasses[action.payload.subject];
                 newState.classes = newClasses;
                 return newState;
             }
@@ -159,6 +173,7 @@ export const reducer = persistReducer(
 
 export const actions = {
     init: () => ({ type: types.Init }),
+    set: (name, content) => ({ type: types.Set, payload: {name, content} }),
     setYears: (years) => ({ type: types.SetYears, payload: years }),
     changeYear: (year) => ({ type: types.ChangeYear, payload: year }),
     getDepartments: () => ({ type: types.GetDepartments }),
@@ -170,8 +185,8 @@ export const actions = {
     addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
     removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
     addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} }),
-    addClass: (id) => ({ type: types.SaveClass, payload: id }),
-    removeClass: (id) => ({ type: types.RemoveClass, payload: id }),
+    addClass: (subject, type, number) => ({ type: types.SaveClass, payload: {subject, type, number} }),
+    removeClass: (subject, type, number) => ({ type: types.RemoveClass, payload: {subject, type, number} }),
     setView: (view) => ({ type: types.SetView, payload: view }),
     nothing: () => ({ type: types.Nothing })
 };
@@ -186,6 +201,13 @@ export function* saga() {
             years.all.push(year);
         yield put(actions.setYears(years));
         yield put(actions.getDepartments());
+
+        const classes = yield select(state => state.redux.classes);
+        if (Array.isArray(classes))
+            yield put(actions.set("classes", {}));
+        const view = yield select(state => state.redux.view);
+        if (view != "chosen")
+            yield put(actions.set("view", undefined));
     });
     yield takeLatest(types.GetDepartments, function* () {
         const {data} = yield api.getDepartments();
