@@ -139,11 +139,14 @@ export const reducer = persistReducer(
             case types.SaveClass: {
                 const newState = {...state};
                 const newClasses = {...state.classes};
-                if (!newClasses[action.payload.subject])
+                if (!newClasses[action.payload.subject]) {
                     newClasses[action.payload.subject] = {};
+                    newClasses[action.payload.subject].count = 1;
+                } else {
+                    newClasses[action.payload.subject].count++;
+                }
                 if (!newClasses[action.payload.subject][action.payload.type])
                     newClasses[action.payload.subject][action.payload.type] = {};
-                newClasses[action.payload.subject].number = newClasses[action.payload.subject].number ? newClasses[action.payload.subject].number + 1 : 1;
                 newClasses[action.payload.subject][action.payload.type][action.payload.number] = {...state.shifts[action.payload.subject][action.payload.type][action.payload.number]};
                 newState.classes = newClasses;
                 return newState;
@@ -151,9 +154,9 @@ export const reducer = persistReducer(
             case types.RemoveClass: {
                 const newState = {...state};
                 const newClasses = {...state.classes};
-                delete newClasses[action.payload.subject][action.payload.type][action.payload.number];
                 newClasses[action.payload.subject].count--;
-                if (newClasses[action.payload.subject].count <= 0)
+                delete newClasses[action.payload.subject][action.payload.type][action.payload.number];
+                if (newClasses[action.payload.subject].count == 0)
                     delete newClasses[action.payload.subject];
                 newState.classes = newClasses;
                 return newState;
