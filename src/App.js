@@ -7,6 +7,8 @@ import {PersistGate} from "redux-persist/integration/react";
 import './App.css';
 import PageContainer from "./container/page";
 import "./component/global.css";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import About from "./component/about";
 
 function App() {
     _redux.setupAxios(axios, store);
@@ -14,7 +16,14 @@ function App() {
     return (
         <Provider store={store}>
             <PersistGate persistor={persistor} loading={null}>
-                <PageContainer />
+                <Router>
+                    <PageContainer />
+                    <Switch>
+                        <Route path="/about">
+                            <About />
+                        </Route>
+                    </Switch>
+                </Router>
             </PersistGate>
         </Provider>
     );

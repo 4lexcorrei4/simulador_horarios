@@ -68,7 +68,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
                                                 {
                                                         chosenClasses[shiftInfo.subject.id] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
                                                             ? <div className="save" title="Remover"
-                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name.toLowerCase(), shiftInfo.shift.number)}>X</div>
+                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name.toLowerCase(), shiftInfo.shift.number)}>&#10005;</div>
                                                             : <div className="save" title="Guardar"
                                                                    onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name.toLowerCase(), shiftInfo.shift.number)}>&#9733;</div>
                                                 }
