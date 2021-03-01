@@ -12,6 +12,13 @@
     --sub-top-menu-subject-cross-bg-color: rgba(255, 255, 255, 0.5);
 }
 
+a:link,
+a:visited,
+a:hover,
+a:active {
+    color: #000;
+}
+
 #content {
     overflow-y: auto;
     height: calc(100vh - 125px - 50px);
