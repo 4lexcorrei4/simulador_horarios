@@ -18,7 +18,7 @@ const About = () => {
                 <ul>
                     <li><a href="https://github.com/4lexcorrei4/simulador_horarios" target="_blank">GitHub</a>: Código</li>
                     <li><a href="https://reactjs.org/" target="_blank">React</a>: Front-end</li>
-                    <li><a href="https://supernova.nunl.pt/" target="_blank">Supernova</a>: Back-end</li>
+                    <li><a href="https://supernova.nunl.pt/" target="_blank">Supernova</a>: Conteúdo</li>
                 </ul>
             </div>
         </div>
