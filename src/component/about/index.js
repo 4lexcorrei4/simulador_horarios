@@ -15,7 +15,7 @@ const About = () => {
                 <h4>Contribuir</h4>
                 Quaisquer sugestões de melhoria são sempre bem vindas!<br />
                 O código que permite pôr esta plataforma em funcionamento está disponível <a href="https://github.com/4lexcorrei4/simulador_horarios" target="_blank">aqui</a>.<br />
-                Sente-te à vontade para contribuir e ajudar, sempre segundo a licensa <a href="https://github.com/4lexcorrei4/simulador_horarios/blob/master/LICENSE" target="_blank">GPLv3</a>.
+                Podes contribuir e ajudar sempre que quiseres, sempre segundo a licensa <a href="https://github.com/4lexcorrei4/simulador_horarios/blob/master/LICENSE" target="_blank">GPLv3</a>.
                 <h4>Contacto</h4>
                 Para me contactares basta enviares mensagem por uma das redes sociais disponíveis <a href="https://bitsys.tech/" target="_blank">aqui</a>.
                 <h4>Desenvolvedor</h4>
