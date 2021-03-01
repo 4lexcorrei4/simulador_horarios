@@ -10,6 +10,8 @@ import ReactGA from "react-ga";
 const PageContainer = () => {
     ReactGA.initialize("UA-190799873-1");
     ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.initialize("G-6NWXFDQXSZ");
+    ReactGA.pageview(window.location.pathname + window.location.search);
 
     const dispatch = useDispatch();
     const loading = useSelector(state => state.redux.loading);
