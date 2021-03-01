@@ -3,6 +3,7 @@ import {persistReducer} from "redux-persist";
 import {useHistory} from "react-router-dom";
 import storage from "redux-persist/lib/storage";
 import * as api from "../api/api";
+import conf from "../../conf";
 //import Swal from "sweetalert2";
 //import withReactContent from "sweetalert2-react-content";
 
@@ -266,23 +267,17 @@ export function* saga() {
                             infoShift.instances[index].duration = infoShift.instances[index].duration / 30;
                             infoShift.instances[index].room = infoShift.instances[index].room ? abbreviation + " " + infoShift.instances[index].room : undefined;
                         }
-                        let type = shift.type_display.indexOf("Teórico-Prático") >= 0
-                            ? "TP"
-                            : shift.type_display.indexOf("Teórico") >= 0
-                                ? "T"
-                                : "P";
-                        if (shift.type_display.indexOf("Online") >= 0)
-                            type += "O";
                         infoShift.type = {
-                            name: type,
+                            name: conf.classesTypes(shift.type),
                             title: shift.type_display
                         };
                         delete infoShift.type_display;
-                        shifts[type.toLowerCase()][shift.number] = {
+                        shifts[infoShift.type.name][shift.number] = {
                             subject: infoSubject,
                             shift: infoShift
                         };
                     });
+                    debugger
                     yield put(actions.addOrUpdateShifts(subject, shifts));
                 } else {
                     yield put(actions.removeSubject(subject));

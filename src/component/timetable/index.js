@@ -61,19 +61,19 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
                                             }
                                         ).map(shiftInfo =>
                                             <td
-                                                rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name.toLowerCase()} ${shiftInfo.subject.id}-${shiftInfo.shift.type.name.toLowerCase()}-${shiftInfo.shift.number}`}
-                                                onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}
-                                                onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name.toLowerCase() + "-" + shiftInfo.shift.number)}
+                                                rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name} ${shiftInfo.subject.id}-${shiftInfo.shift.type.name}-${shiftInfo.shift.number}`}
+                                                onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number)}
+                                                onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number)}
                                             >
                                                 {
-                                                        chosenClasses[shiftInfo.subject.id] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
+                                                        chosenClasses[shiftInfo.subject.id] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
                                                             ? <div className="save" title="Remover"
-                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name.toLowerCase(), shiftInfo.shift.number)}>&#10005;</div>
+                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#10005;</div>
                                                             : <div className="save" title="Guardar"
-                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name.toLowerCase(), shiftInfo.shift.number)}>&#9733;</div>
+                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#9733;</div>
                                                 }
                                                 <h3><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></h3>
-                                                <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
+                                                <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
                                         : <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
