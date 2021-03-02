@@ -256,6 +256,7 @@ export function* saga() {
     });
     yield takeLatest(types.GetDepartments, function* () {
         const {data} = yield api.getDepartments();
+        data.sort((a, b) => a.name == b.name ? 0 : a.name > b.name ? 1 : -1);
         yield put(actions.setDepartments(data));
     });
     yield takeLatest(types.SetDepartment, function* ({payload: department}) {
@@ -279,7 +280,7 @@ export function* saga() {
                 })
             }
         });
-        subjects.sort((a, b) => a.name > b.name);
+        subjects.sort((a, b) => a.name == b.name ? 0 : a.name > b.name ? 1 : -1);
         yield put(actions.setSubjects(subjects));
     });
     yield takeLatest(types.ChangeYear, function* ({payload: year}) {
