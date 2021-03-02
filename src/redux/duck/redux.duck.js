@@ -24,6 +24,7 @@ export const types = {
     RemoveSubject: "[Redux] RemoveSubject",
     AddOrUpdateShifts: "[Redux] AddOrUpdateShifts",
     SaveClass: "[Redux] SaveClass",
+    UpdateClasses: "[Redux] UpdateClasses",
     RemoveClass: "[Redux] RemoveClass",
     SetView: "[Redux] SetView",
     Nothing: "[Redux] Nothing",
@@ -152,6 +153,19 @@ export const reducer = persistReducer(
                 newState.classes = newClasses;
                 return newState;
             }
+            case types.UpdateClasses: {
+                const newState = {...state};
+                const newClasses = {...state.classes};
+                Object.keys(newClasses).map(subject => {
+                    Object.keys(newClasses[subject]).map(type => {
+                        Object.keys(newClasses[subject][type]).map(number => {
+                            newClasses[subject][type][number] = newState.shifts[subject][type][number];
+                        });
+                    });
+                });
+                newState.classes = {...newClasses};
+                return newState;
+            }
             case types.RemoveClass: {
                 const newState = {...state};
                 const newClasses = {...state.classes};
@@ -190,6 +204,7 @@ export const actions = {
     removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
     addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} }),
     addClass: (subject, type, number) => ({ type: types.SaveClass, payload: {subject, type, number} }),
+    updateClasses: () => ({ type: types.UpdateClasses }),
     removeClass: (subject, type, number) => ({ type: types.RemoveClass, payload: {subject, type, number} }),
     setView: (view) => ({ type: types.SetView, payload: view }),
     nothing: () => ({ type: types.Nothing })
@@ -270,6 +285,7 @@ export function* saga() {
     yield takeLatest(types.ChangeYear, function* ({payload: year}) {
         const subjects = yield select(state => state.redux.subject.chosen);
         yield put(actions.addOrUpdateSubjects(Object.keys(subjects)));
+        yield put(actions.updateClasses());
     });
     yield takeLatest(types.AddOrUpdateSubjects, function* ({payload: subjects}) {
         let index = 0;
