@@ -49,7 +49,7 @@ const initialState = {
 };
 
 export const reducer = persistReducer(
-    {storage, key: "simulador-horarios"},
+    {storage, key: "simuladorHorarios-redux"},
     (state = initialState, action) => {
         switch (action.type) {
             case types.Set: {
@@ -324,7 +324,6 @@ export function* saga() {
                             shift: infoShift
                         };
                     });
-                    debugger
                     yield put(actions.addOrUpdateShifts(subject, shifts));
                 } else {
                     yield put(actions.removeSubject(subject));
