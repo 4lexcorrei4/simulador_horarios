@@ -1,6 +1,7 @@
 #footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: var(--top-menu-bg-color);
     height: 50px;
     padding: 0 10px;
@@ -9,8 +10,8 @@
 }
 
 #footer #logo {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
 }
 
 #footer #menu {
