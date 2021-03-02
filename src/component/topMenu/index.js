@@ -41,10 +41,16 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                     value={year}
                     onChange={(event) => changeYear(event.target.value)}
                 >
-                    <option disabled selected>Escolher Ano Letivo</option>
+                    <option disabled selected>Escolher Período Letivo</option>
                     {
                         years.map(year =>
-                            <option value={year}>{year}</option>
+                            <optgroup label={year.year}>
+                                {
+                                    year.times.map(time =>
+                                        <option value={year.year + "-" + time.id}>{time.name}</option>
+                                    )
+                                }
+                            </optgroup>
                         )
                     }
                 </select>

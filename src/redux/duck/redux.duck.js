@@ -197,12 +197,38 @@ export const actions = {
 
 export function* saga() {
     yield takeLatest(types.Init, function* () {
+        const todayYear = new Date().getFullYear();
+        const todayMonth = new Date().getMonth() + 1;
+        const todayDay = new Date().getDay();
+        const currentYear = todayMonth >= 8 ? todayYear + 1 : todayYear;
+        const currentTime =
+            todayMonth >= 8
+                ? 2 // 1º semestre
+                : todayMonth + "" + todayDay <= "215"
+                    ? 5 // trimestre
+                    : 3 // 2º semestre
         const years = {
             all: [],
-            chosen: new Date().getMonth() >= 9 ? new Date().getFullYear() + 1 : new Date().getFullYear()
+            chosen: currentYear + "-" + currentTime
         }
-        for (let year = years.chosen; year >= 2015; year--)
-            years.all.push(year);
+        for (let year = currentYear; year >= 2015; year--)
+            years.all.push({
+                year: year,
+                times: [
+                    {
+                        id: 2,
+                        name: "1º Semestre"
+                    },
+                    {
+                        id: 5,
+                        name: "Trimestre"
+                    },
+                    {
+                        id: 3,
+                        name: "2º Semestre"
+                    }
+                ]
+            });
         yield put(actions.setYears(years));
         yield put(actions.getDepartments());
 
@@ -218,8 +244,28 @@ export function* saga() {
         yield put(actions.setDepartments(data));
     });
     yield takeLatest(types.SetDepartment, function* ({payload: department}) {
-        const {data} = yield api.getDepartmentSubjects(department);
-        yield put(actions.setSubjects(data.classes));
+        const yearTime = yield select(state => state.redux.year.chosen);
+        const year = yearTime.split("-")[0];
+        const time = yearTime.split("-")[1];
+        const subjectsInfos = {};
+        {
+            const {data} = yield api.getDepartmentSubjects(department);
+            data.classes.map(subject => {
+                subjectsInfos[subject.id] = subject.name;
+            });
+        }
+        const {data} = yield api.getDepartmentSubjectsByYear(department, year);
+        const subjects = [];
+        data.map(subject => {
+            if (subject.period == time || subject.period == 1) {
+                subjects.push({
+                    id: subject.parent,
+                    name: subjectsInfos[subject.parent]
+                })
+            }
+        });
+        subjects.sort((a, b) => a.name > b.name);
+        yield put(actions.setSubjects(subjects));
     });
     yield takeLatest(types.ChangeYear, function* ({payload: year}) {
         const subjects = yield select(state => state.redux.subject.chosen);
@@ -233,7 +279,8 @@ export function* saga() {
                 const {data} = yield api.getSubject(subject);
                 let subjectInfo = data;
                 let instances = data.instances;
-                const year = yield select(state => state.redux.year.chosen);
+                const yearTime = yield select(state => state.redux.year.chosen);
+                const year = yearTime.split("-")[0];
                 let found = false;
                 let instance = undefined;
                 for (let index = 0; !found && index < instances.length; index++) {

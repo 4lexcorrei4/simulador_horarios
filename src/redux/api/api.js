@@ -9,6 +9,10 @@ export function getDepartmentSubjects(department) {
     return axios.get(urls.departmentSubjects(department));
 }
 
+export function getDepartmentSubjectsByYear(department, year) {
+    return axios.get(urls.departmentSubjectsByYear(department, year));
+}
+
 export function getSubject(subject) {
     return axios.get(urls.subject(subject));
 }
