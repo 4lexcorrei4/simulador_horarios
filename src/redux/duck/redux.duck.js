@@ -314,14 +314,7 @@ export function* saga() {
                     delete infoSubject.url;
                     const {data} = yield api.getSubjectShifts(instance);
                     const shiftsInformation = data;
-                    const shifts = {
-                        t: {},
-                        to: {},
-                        tp: {},
-                        tpo: {},
-                        p: {},
-                        po: {}
-                    };
+                    const shifts = {};
                     const {data: {building: {abbreviation}}} = yield api.getDepartmentSubjects(infoSubject.department.id);
                     shiftsInformation.map(shift => {
                         let infoShift = {...shift};
@@ -336,6 +329,8 @@ export function* saga() {
                             title: shift.type_display
                         };
                         delete infoShift.type_display;
+                        if (!shifts[infoShift.type.name])
+                            shifts[infoShift.type.name] = {};
                         shifts[infoShift.type.name][shift.number] = {
                             subject: infoSubject,
                             shift: infoShift

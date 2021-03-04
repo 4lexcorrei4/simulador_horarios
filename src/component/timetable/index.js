@@ -8,12 +8,14 @@ import ElementTD from "../elementTd";
 const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
     const dispatch = useDispatch();
 
-    const onMouseOver = (id) => {
+    const onMouseOver = (id, subject) => {
         $("." + id).addClass("hover");
+        $("." + subject).addClass("subject-hover");
     };
 
-    const onMouseLeave = (id) => {
+    const onMouseLeave = (id, subject) => {
         $("." + id).removeClass("hover");
+        $("." + subject).removeClass("subject-hover");
     };
 
     const saveOrRemoveClass = (subject, type, number) => {
@@ -33,6 +35,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
                     <th colSpan={maxClasses[2]}>4ª</th>
                     <th colSpan={maxClasses[3]}>5ª</th>
                     <th colSpan={maxClasses[4]}>6ª</th>
+                    <th colSpan={maxClasses[5]}>Sábado</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +52,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
 
                     }:00</td>
                         {
-                            [0, 1, 2, 3, 4].map(day => <>
+                            [0, 1, 2, 3, 4, 5].map(day => <>
                                 {
                                     filled[hours.indexOf(hour)][day]
                                         ? classes[hours.indexOf(hour)][day].sort(
@@ -61,9 +64,10 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
                                             }
                                         ).map(shiftInfo =>
                                             <td
-                                                rowSpan={shiftInfo.shift.duration} className={`class ${shiftInfo.shift.type.name} ${shiftInfo.subject.id}-${shiftInfo.shift.type.name}-${shiftInfo.shift.number}`}
-                                                onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number)}
-                                                onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number)}
+                                                rowSpan={shiftInfo.shift.duration}
+                                                className={`class ${shiftInfo.shift.type.name} ${shiftInfo.subject.id} ${shiftInfo.subject.id}-${shiftInfo.shift.type.name}-${shiftInfo.shift.number}`}
+                                                onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number, shiftInfo.subject.id)}
+                                                onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number, shiftInfo.subject.id)}
                                             >
                                                 {
                                                         chosenClasses[shiftInfo.subject.id] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]

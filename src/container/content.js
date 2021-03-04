@@ -16,7 +16,7 @@ const ContentContainer = () => {
     hours.map(() => {
         let hour1 = [];
         let hour2 = [];
-        [1, 2, 3, 4, 5].map(() => {
+        [1, 2, 3, 4, 5, 6].map(() => {
             hour1.push([]);
             hour2.push(0);
         })
@@ -24,7 +24,7 @@ const ContentContainer = () => {
         filled.push(hour2);
     });
 
-    const maxClasses = [1, 1, 1, 1, 1];
+    const maxClasses = [1, 1, 1, 1, 1, 1];
 
     let showShifts = view == "chosen" ? chosenClasses : shifts;
 

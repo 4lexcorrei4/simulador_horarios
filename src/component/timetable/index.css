@@ -86,6 +86,10 @@
     background-color: rgba(235, 235, 235, 1);
 }
 
+.timetable .class.subject-hover {
+    background-color: rgba(170, 170, 170, 1);
+}
+
 .timetable .class.hover {
     background-color: rgba(130, 130, 130, 1);
     color: #fff;
