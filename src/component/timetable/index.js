@@ -35,7 +35,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
                     <th colSpan={maxClasses[2]}>4ª (Qua)</th>
                     <th colSpan={maxClasses[3]}>5ª (Qui)</th>
                     <th colSpan={maxClasses[4]}>6ª (Sex)</th>
-                    <th colSpan={maxClasses[5]}>Sáb</th>
+                    <th colSpan={maxClasses[5]}>Sábado</th>
                 </tr>
             </thead>
             <tbody>
