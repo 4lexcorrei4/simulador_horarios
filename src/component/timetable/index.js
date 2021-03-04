@@ -30,12 +30,12 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
             <thead>
                 <tr>
                     <th>Hora</th>
-                    <th colSpan={maxClasses[0]}>2ª</th>
-                    <th colSpan={maxClasses[1]}>3ª</th>
-                    <th colSpan={maxClasses[2]}>4ª</th>
-                    <th colSpan={maxClasses[3]}>5ª</th>
-                    <th colSpan={maxClasses[4]}>6ª</th>
-                    <th colSpan={maxClasses[5]}>Sábado</th>
+                    <th colSpan={maxClasses[0]}>2ª (Seg)</th>
+                    <th colSpan={maxClasses[1]}>3ª (Ter)</th>
+                    <th colSpan={maxClasses[2]}>4ª (Qua)</th>
+                    <th colSpan={maxClasses[3]}>5ª (Qui)</th>
+                    <th colSpan={maxClasses[4]}>6ª (Sex)</th>
+                    <th colSpan={maxClasses[5]}>Sáb</th>
                 </tr>
             </thead>
             <tbody>
