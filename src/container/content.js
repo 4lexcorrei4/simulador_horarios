@@ -1,8 +1,9 @@
 import React from "react";
 import Timetable from "../component/timetable";
 import {useSelector} from "react-redux";
+import TopMenuContainer from "./topMenu";
 
-const ContentContainer = () => {
+const ContentContainer = ({timetableRef}) => {
     const shifts = useSelector(state => state.redux.shifts);
     const chosenClasses = useSelector(state => state.redux.classes);
     const view = useSelector(state => state.redux.view);
@@ -58,6 +59,7 @@ const ContentContainer = () => {
             classes={classes}
             filled={filled}
             chosenClasses={chosenClasses}
+            timetableRef={timetableRef}
         />
     </div>
 };

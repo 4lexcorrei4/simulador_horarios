@@ -5,7 +5,7 @@ import {actions} from "../../redux/duck/redux.duck";
 import {useDispatch} from "react-redux";
 import ElementTD from "../elementTd";
 
-const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
+const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetableRef}) => {
     const dispatch = useDispatch();
 
     const onMouseOver = (id, subject) => {
@@ -26,7 +26,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses}) => {
     };
 
     return <>
-        <table id="timetable" className="timetable">
+        <table ref={timetableRef} className="timetable">
             <thead>
                 <tr>
                     <th>Hora</th>

@@ -5,7 +5,7 @@
 }
 
 .timetable thead {
-    background-color: rgba(200, 200, 200, 0.3);
+    background-color: rgba(220, 220, 220, 1);
     border-bottom: 1px solid gray;
 }
 
@@ -48,12 +48,12 @@
 }
 
 .timetable tbody tr td:first-child {
-    border-right: 1px solid rgba(150, 150, 150, 0.5);
+    border-right: 1px solid rgba(200, 200, 200, 1);
 }
 
 .timetable .class {
     text-align: center;
-    border: 1px solid rgba(100, 100, 100, 0.5);
+    border: 1px solid rgba(200, 200, 200, 1);
     transition: background-color 0.5s, color 0.5s;
 }
 

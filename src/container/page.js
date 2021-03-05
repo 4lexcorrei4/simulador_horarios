@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import TopMenuContainer from "./topMenu";
 import ContentContainer from "./content";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,6 +15,7 @@ const PageContainer = () => {
 
     const dispatch = useDispatch();
     const loading = useSelector(state => state.redux.loading);
+    let timetableRef = useRef(null);
 
     useEffect(
         () => {
@@ -24,8 +25,8 @@ const PageContainer = () => {
     );
 
     return <>
-        <TopMenuContainer />
-        <ContentContainer />
+        <TopMenuContainer timetableRef={timetableRef} />
+        <ContentContainer timetableRef={timetableRef} />
         <FooterContainer />
         {
             loading ? <Loader /> : <></>

@@ -2,8 +2,11 @@ import React from "react";
 import "./index.css";
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../../redux/duck/redux.duck";
+import {NavLink} from "react-router-dom";
+import {toPng} from "html-to-image";
+import $ from "jquery";
 
-const TopMenu = ({name, logo, years, year, departments, department, subjects, subject}) => {
+const TopMenu = ({name, logo, years, year, departments, department, subjects, subject, timetableRef}) => {
     const dispatch = useDispatch();
 
     const view = useSelector(state => state.redux.view);
@@ -26,6 +29,18 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
 
     const setView = (view) => {
         dispatch(actions.setView(view));
+    };
+
+    const takeScreenshot = () => {
+        if (timetableRef)
+            toPng(timetableRef.current).then(url => {
+                const toDownload = document.createElement("a");
+                console.log(toDownload)
+                toDownload.href = url;
+                toDownload.download = "horario.png";
+                toDownload.click();
+                toDownload.remove();
+            });
     };
 
     const chosenSubjects = Object.values(subject).sort((a, b) => {return a.abbreviation > b.abbreviation});
@@ -92,6 +107,7 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
             </div>
             <div id="menu">
                 <div className="option option-only" onClick={() => changeYear(year)}><span>&#8634; Atualizar</span></div>
+                <div className="option option-only" onClick={() => takeScreenshot()}><span>&#128247; Imagem</span></div>
                 <div id="view" className="option">
                     <span className={view == undefined ? "active" : ""} onClick={() => setView(undefined)}>Escolher</span>
                     <span className={view == "chosen" ? "active" : ""} onClick={() => setView("chosen")}>Escolhido</span>

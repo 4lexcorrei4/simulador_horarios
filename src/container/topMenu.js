@@ -3,7 +3,7 @@ import TopMenu from "../component/topMenu";
 import conf from "../conf";
 import {useSelector} from "react-redux";
 
-const TopMenuContainer = () => {
+const TopMenuContainer = ({timetableRef}) => {
     const years = useSelector(state => state.redux.year.all);
     const year = useSelector(state => state.redux.year.chosen);
     const departments = useSelector(state => state.redux.department.all);
@@ -20,6 +20,7 @@ const TopMenuContainer = () => {
         department={department}
         subjects={subjects}
         subject={subject}
+        timetableRef={timetableRef}
     />
 };
 
