@@ -71,7 +71,7 @@
     padding: 10px;
 }
 
-#subTopMenu #menu div {
+#subTopMenu #menu .option {
     display: flex;
     align-items: stretch;
     font-weight: bold;
@@ -82,17 +82,17 @@
     margin-right: 10px;
 }
 
-#subTopMenu #menu #update {
+#subTopMenu #menu .option-only {
     padding: 0 20px;
     display: flex;
     align-items: center;
 }
 
-#subTopMenu #menu div:last-child {
+#subTopMenu #menu .option:last-child {
     margin-right: 0;
 }
 
-#subTopMenu #menu .option:hover,
+#subTopMenu #menu .option-only:hover,
 #subTopMenu #view span:hover,
 #subTopMenu #view span.active {
     background-color: var(--sub-top-menu-subject-bg-color-hover);

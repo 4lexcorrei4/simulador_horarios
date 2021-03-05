@@ -91,8 +91,8 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                 }
             </div>
             <div id="menu">
-                <div className="option" id="update" onClick={() => changeYear(year)}><span>&#8634; Atualizar</span></div>
-                <div id="view">
+                <div className="option option-only" onClick={() => changeYear(year)}><span>&#8634; Atualizar</span></div>
+                <div id="view" className="option">
                     <span className={view == undefined ? "active" : ""} onClick={() => setView(undefined)}>Escolher</span>
                     <span className={view == "chosen" ? "active" : ""} onClick={() => setView("chosen")}>Escolhido</span>
                 </div>
