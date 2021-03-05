@@ -73,7 +73,7 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                         subjects.map(option =>
                             subject[option.id]
                                 ? <></>
-                                : <option value={option.id}>{option.name}</option>
+                                : <option value={option.id}>{option.name}{option.clipId ? " - " + option.clipId: ""}</option>
                         )
                     }
                 </select>

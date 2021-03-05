@@ -271,17 +271,34 @@ export function* saga() {
             });
         }
         const {data} = yield api.getDepartmentSubjectsByYear(department, year);
-        const subjects = [];
+        const subjectsNames = {};
+        const subjectsObj = {};
         data.map(subject => {
             if (subject.period == time || subject.period == 1) {
-                subjects.push({
+                subjectsObj[subject.parent] = {
                     id: subject.parent,
                     name: subjectsInfos[subject.parent]
-                })
+                };
+                if (!subjectsNames[subjectsInfos[subject.parent]])
+                    subjectsNames[subjectsInfos[subject.parent]] = [subject.parent];
+                else
+                    subjectsNames[subjectsInfos[subject.parent]].push(subject.parent);
             }
         });
-        subjects.sort((a, b) => a.name == b.name ? 0 : a.name > b.name ? 1 : -1);
-        yield put(actions.setSubjects(subjects));
+        for (let index = 0; index < Object.keys(subjectsNames).length; index++) {
+            let name = Object.keys(subjectsNames)[index];
+            if (subjectsNames[name].length > 1) {
+                let ids = subjectsNames[name];
+                for (let indexIds = 0; indexIds < ids.length; indexIds++) {
+                    let id = ids[indexIds];
+                    const {data} = yield api.getSubject(id);
+                    subjectsObj[id].clipId = data.external_id;
+                }
+            }
+        }
+        const subjectArray = Object.values(subjectsObj);
+        subjectArray.sort((a, b) => a.name == b.name ? 0 : a.name > b.name ? 1 : -1);
+        yield put(actions.setSubjects(subjectArray));
     });
     yield takeLatest(types.ChangeYear, function* ({payload: year}) {
         const subjects = yield select(state => state.redux.subject.chosen);
@@ -290,6 +307,7 @@ export function* saga() {
     });
     yield takeLatest(types.AddOrUpdateSubjects, function* ({payload: subjects}) {
         let index = 0;
+        let depsShort = {};
         do {
             let subject = Array.isArray(subjects) ? subjects[index++] : subjects;
             if (subject > 0) {
@@ -315,14 +333,18 @@ export function* saga() {
                     const {data} = yield api.getSubjectShifts(instance);
                     const shiftsInformation = data;
                     const shifts = {};
-                    const {data: {building: {abbreviation}}} = yield api.getDepartmentSubjects(infoSubject.department.id);
+                    const depId = infoSubject.department.id;
+                    if (!depsShort[depId]) {
+                        const {data: {building: {abbreviation}}} = yield api.getDepartmentSubjects(depId);
+                        depsShort[depId] = abbreviation;
+                    }
                     shiftsInformation.map(shift => {
                         let infoShift = {...shift};
                         delete infoShift.teachers;
                         delete infoShift.url;
                         for (let index = 0; index < infoShift.instances.length; index++) {
                             infoShift.instances[index].duration = infoShift.instances[index].duration / 30;
-                            infoShift.instances[index].room = infoShift.instances[index].room ? abbreviation + " " + infoShift.instances[index].room : undefined;
+                            infoShift.instances[index].room = infoShift.instances[index].room ? depsShort[depId] + " " + infoShift.instances[index].room : undefined;
                         }
                         infoShift.type = {
                             name: conf.classesTypes(shift.type),
