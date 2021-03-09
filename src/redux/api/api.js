@@ -17,6 +17,6 @@ export function getSubject(subject) {
     return axios.get(urls.subject(subject));
 }
 
-export function getSubjectShifts(instance) {
-    return axios.get(urls.subjectShifts(instance));
+export function getSubjectShifts(subject, year, time) {
+    return axios.get(urls.subjectShifts(subject, year, time));
 }

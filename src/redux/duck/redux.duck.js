@@ -316,6 +316,7 @@ export function* saga() {
                 let instances = data.instances;
                 const yearTime = yield select(state => state.redux.year.chosen);
                 const year = yearTime.split("-")[0];
+                const time = yearTime.split("-")[1];
                 let found = false;
                 let instance = undefined;
                 for (let index = 0; !found && index < instances.length; index++) {
@@ -330,7 +331,7 @@ export function* saga() {
                     infoSubject.credits = infoSubject.credits / 2;
                     delete infoSubject.instances;
                     delete infoSubject.url;
-                    const {data} = yield api.getSubjectShifts(instance);
+                    const {data} = yield api.getSubjectShifts(subjectInfo.external_id, year, time);
                     const shiftsInformation = data;
                     const shifts = {};
                     const depId = infoSubject.department.id;
