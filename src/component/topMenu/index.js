@@ -52,7 +52,7 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                 <h1>{name}</h1>
             </span>
             <span>
-                <select
+                {/*<select
                     value={year}
                     onChange={(event) => changeYear(event.target.value)}
                 >
@@ -68,7 +68,7 @@ const TopMenu = ({name, logo, years, year, departments, department, subjects, su
                             </optgroup>
                         )
                     }
-                </select>
+                </select>*/}
                 <select
                     value={department}
                     onChange={(event) => chooseDepartment(event.target.value)}
