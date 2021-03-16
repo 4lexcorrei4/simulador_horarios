@@ -346,6 +346,11 @@ export function* saga() {
                         for (let index = 0; index < infoShift.instances.length; index++) {
                             infoShift.instances[index].duration = infoShift.instances[index].duration / 30;
                             infoShift.instances[index].room = infoShift.instances[index].room ? depsShort[depId] + " " + infoShift.instances[index].room : undefined;
+
+                            infoShift.instances[index].url = "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular/actividade/turnos" +
+                                "?tipo_de_per%EDodo_lectivo=" + conf.timeType(time) + "&sector=98021&ano_lectivo=" + year +
+                                "&per%EDodo_lectivo=" + conf.timeNumber(time) + "&institui%E7%E3o=97747&unidade_curricular=" + subjectInfo.external_id +
+                                "&tipo=" + conf.classesTypesCLIP(shift.type) + "&n%BA=" + infoShift.number;
                         }
                         infoShift.type = {
                             name: conf.classesTypes(shift.type),

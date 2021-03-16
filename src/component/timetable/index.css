@@ -65,6 +65,13 @@
     margin: 0;
 }
 
+.timetable .class a {
+    transition: all 0.5s;
+}
+.timetable .class.hover a {
+    color: #fff;
+}
+
 .timetable .class.t {
     background-color: rgba(210, 210, 210, 1);
 }

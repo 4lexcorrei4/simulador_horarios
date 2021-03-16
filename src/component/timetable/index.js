@@ -77,7 +77,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
                                                                    onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#9733;</div>
                                                 }
                                                 <h3><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></h3>
-                                                <p><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span><br />{shiftInfo.shift.room}</p>
+                                                <p><a href={shiftInfo.shift.url ? shiftInfo.shift.url : "javascript:;"} target="_blank"><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span></a><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
                                         : <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
