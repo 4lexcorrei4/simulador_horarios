@@ -76,7 +76,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
                                                             : <div className="save" title="Guardar"
                                                                    onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#9733;</div>
                                                 }
-                                                <h3><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></h3>
+                                                <h3><a href={shiftInfo.subject.url ? shiftInfo.subject.url : "javascript:;"} target={shiftInfo.subject.url ? "_blank" : ""}><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></a></h3>
                                                 <p><a href={shiftInfo.shift.url ? shiftInfo.shift.url : "javascript:;"} target={shiftInfo.shift.url ? "_blank" : ""}><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span></a><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
