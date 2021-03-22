@@ -1,5 +1,6 @@
 const urls = {
     base: () => "https://api.horarios.bitsys.tech/get?url=",
+    lastUpdate: (year, time) => "https://api.horarios.bitsys.tech/lastupdate?year=" + year + "&time=" + time,
     departments: () => urls.base() + "/departments",
     departmentSubjects: (depId) => urls.base() + "/department/" + depId,
     departmentSubjectsByYear: (depId, year) => urls.base() + "/department/" + depId + "/class_instances?year=" + year,

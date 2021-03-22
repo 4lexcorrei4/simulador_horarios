@@ -1,6 +1,10 @@
 import axios from "axios";
 import urls from "./urls";
 
+export function lastUpdate(year, time) {
+    return axios.get(urls.lastUpdate(year, time));
+}
+
 export function getDepartments() {
     return axios.get(urls.departments());
 }

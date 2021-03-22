@@ -27,6 +27,7 @@ export const types = {
     UpdateClasses: "[Redux] UpdateClasses",
     RemoveClass: "[Redux] RemoveClass",
     SetView: "[Redux] SetView",
+    LastUpdate: "[Redux] LastUpdate",
     Nothing: "[Redux] Nothing",
 };
 
@@ -46,7 +47,8 @@ const initialState = {
     },
     shifts: {},
     classes: {},
-    loading: true
+    loading: true,
+    lastUpdate: undefined
 };
 
 export const reducer = persistReducer(
@@ -181,6 +183,11 @@ export const reducer = persistReducer(
                 newState.view = action.payload;
                 return newState;
             }
+            case types.LastUpdate: {
+                const newState = {...state};
+                newState.lastUpdate = action.payload;
+                return newState;
+            }
             default:
                 const newState = {...state};
                 newState.loading = false;
@@ -207,6 +214,7 @@ export const actions = {
     updateClasses: () => ({ type: types.UpdateClasses }),
     removeClass: (subject, type, number) => ({ type: types.RemoveClass, payload: {subject, type, number} }),
     setView: (view) => ({ type: types.SetView, payload: view }),
+    lastUpdate: (data) => ({ type: types.LastUpdate, payload: data }),
     nothing: () => ({ type: types.Nothing })
 };
 
@@ -253,6 +261,19 @@ export function* saga() {
         const view = yield select(state => state.redux.view);
         if (view != "chosen")
             yield put(actions.set("view", undefined));
+
+        let lastUpdate = yield select(state => state.redux.lastUpdate);
+        const {data} = yield api.lastUpdate(currentYear, currentTime);
+        const lastDBUpdate = new Date(Date.parse(data));
+        let updateShifts = false;
+        if (!lastUpdate)
+            updateShifts = true;
+        else {
+            lastUpdate = new Date(Date.parse(yield select(state => state.redux.lastUpdate)));
+            updateShifts = lastUpdate < lastDBUpdate;
+        }
+        if (updateShifts)
+            yield put(actions.changeYear(years.chosen));
     });
     yield takeLatest(types.GetDepartments, function* () {
         const {data} = yield api.getDepartments();
@@ -374,5 +395,11 @@ export function* saga() {
             }
         } while (Array.isArray(subjects) && index <= subjects.length);
         yield put(actions.nothing());
+
+        const yearTime = yield select(state => state.redux.year.chosen);
+        const year = yearTime.split("-")[0];
+        const time = yearTime.split("-")[1];
+        const {data} = yield api.lastUpdate(year, time);
+        yield put(actions.lastUpdate(data));
     });
 }
