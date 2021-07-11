@@ -10,11 +10,33 @@ import conf from "../../conf";
 //const swal = withReactContent(Swal);
 
 export const types = {
-    Init: "[Redux] Init"
+    Init: "[Redux] Init",
+    Set: "[Redux] Set",
+    SetYears: "[Redux] SetYears",
+    ChangeYear: "[Redux] ChangeYear",
+    GetDepartments: "[Redux] GetDepartments",
+    SetDepartments: "[Redux] SetDepartments",
+    SetDepartment: "[Redux] SetDepartment",
+    GetDepartmentSubjects: "[Redux] GetDepartmentSubjects",
+    SetSubjects: "[Redux] SetSubjects",
+    AddOrUpdateSubjects: "[Redux] AddOrUpdateSubjects",
+    AddSubjectDone: "[Redux] AddSubjectDone",
+    RemoveSubject: "[Redux] RemoveSubject",
+    AddOrUpdateShifts: "[Redux] AddOrUpdateShifts",
+    SaveClass: "[Redux] SaveClass",
+    UpdateClasses: "[Redux] UpdateClasses",
+    RemoveClass: "[Redux] RemoveClass",
+    SetView: "[Redux] SetView",
+    LastUpdate: "[Redux] LastUpdate",
+    Nothing: "[Redux] Nothing",
 };
 
 const initialState = {
     view: undefined,
+    year: {
+        all: [],
+        chosen: undefined
+    },
     department: {
         all: [],
         chosen: undefined
@@ -30,10 +52,10 @@ const initialState = {
 };
 
 export const reducer = persistReducer(
-    {storage, key: "simulador-horarios"},
+    {storage, key: "simuladorHorarios-redux"},
     (state = initialState, action) => {
         switch (action.type) {
-            /*case types.Set: {
+            case types.Set: {
                 const newState = {...state};
                 newState[action.payload.name] = action.payload.content;
                 return newState;
@@ -165,19 +187,72 @@ export const reducer = persistReducer(
                 const newState = {...state};
                 newState.lastUpdate = action.payload;
                 return newState;
-            }*/
+            }
             default:
-                return state;
+                const newState = {...state};
+                newState.loading = false;
+                return newState;
         }
     }
 );
 
 export const actions = {
-    init: () => ({ type: types.Init })
+    init: () => ({ type: types.Init }),
+    set: (name, content) => ({ type: types.Set, payload: {name, content} }),
+    setYears: (years) => ({ type: types.SetYears, payload: years }),
+    changeYear: (year) => ({ type: types.ChangeYear, payload: year }),
+    getDepartments: () => ({ type: types.GetDepartments }),
+    setDepartments: (departments) => ({ type: types.SetDepartments, payload: departments }),
+    setDepartment: (department) => ({ type: types.SetDepartment, payload: department }),
+    getDepartmentSubjects: (department) => ({ type: types.GetDepartmentSubjects, payload: department }),
+    setSubjects: (subjects) => ({ type: types.SetSubjects, payload: subjects }),
+    addOrUpdateSubjects: (subjects) => ({ type: types.AddOrUpdateSubjects, payload: subjects }),
+    addSubjectDone: (subjectInfo) => ({ type: types.AddSubjectDone, payload: subjectInfo }),
+    removeSubject: (subject) => ({ type: types.RemoveSubject, payload: subject }),
+    addOrUpdateShifts: (subject, shifts) => ({ type: types.AddOrUpdateShifts, payload: {subject, shifts} }),
+    addClass: (subject, type, number) => ({ type: types.SaveClass, payload: {subject, type, number} }),
+    updateClasses: () => ({ type: types.UpdateClasses }),
+    removeClass: (subject, type, number) => ({ type: types.RemoveClass, payload: {subject, type, number} }),
+    setView: (view) => ({ type: types.SetView, payload: view }),
+    lastUpdate: (data) => ({ type: types.LastUpdate, payload: data }),
+    nothing: () => ({ type: types.Nothing })
 };
 
 export function* saga() {
-    /*yield takeLatest(types.Init, function* () {
+    yield takeLatest(types.Init, function* () {
+        const todayYear = new Date().getFullYear();
+        const todayMonth = new Date().getMonth() + 1;
+        const todayDay = new Date().getDay();
+        const currentYear = todayMonth >= 8 ? todayYear + 1 : todayYear;
+        const currentTime =
+            todayMonth >= 8
+                ? 2 // 1º semestre
+                : todayMonth + "" + todayDay <= "215"
+                    ? 5 // trimestre
+                    : 3 // 2º semestre
+        const years = {
+            all: [],
+            chosen: currentYear + "-" + currentTime
+        }
+        for (let year = currentYear; year >= 2015; year--)
+            years.all.push({
+                year: year,
+                times: [
+                    {
+                        id: 2,
+                        name: "1º Semestre"
+                    },
+                    {
+                        id: 5,
+                        name: "Trimestre"
+                    },
+                    {
+                        id: 3,
+                        name: "2º Semestre"
+                    }
+                ]
+            });
+        yield put(actions.setYears(years));
         yield put(actions.getDepartments());
 
         const classes = yield select(state => state.redux.classes);
@@ -326,5 +401,5 @@ export function* saga() {
         const time = yearTime.split("-")[1];
         const {data} = yield api.lastUpdate(year, time);
         yield put(actions.lastUpdate(data));
-    });*/
+    });
 }

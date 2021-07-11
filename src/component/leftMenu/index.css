@@ -1,0 +1,34 @@
+#leftMenu {
+    width: 100px;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    border-right: 1px solid var(--menu-border);
+    background-color: var(--menu-bg-color);
+}
+
+#leftMenu .logo {
+    background-color: var(--menu-bg-color-logo);
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+
+#leftMenu .logo img {
+    height: 60px;
+    width: 60px;
+}
+
+#leftMenu .title {
+    padding: 5px 5px 0 5px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#leftMenu .option {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

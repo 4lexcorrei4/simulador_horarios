@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.css";
 import $ from "jquery";
-import {actions} from "../../redux/duck/redux.duck";
+import {actions} from "../../redux/duck/old_redux.duck";
 import {useDispatch} from "react-redux";
 import ElementTD from "../elementTd";
 

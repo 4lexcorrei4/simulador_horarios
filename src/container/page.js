@@ -2,14 +2,15 @@ import React, {useEffect, useRef} from "react";
 import TopMenuContainer from "./topMenu";
 import ContentContainer from "./content";
 import {useDispatch, useSelector} from "react-redux";
-import {actions} from "../redux/duck/redux.duck";
+import {actions} from "../redux/duck/old_redux.duck";
 import Loader from "../component/loader";
 import FooterContainer from "./footer";
 import ReactGA from "react-ga";
+import LeftMenuContainer from "./leftMenu";
 
 const PageContainer = () => {
-    ReactGA.initialize("UA-190799873-1");
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    //ReactGA.initialize("UA-190799873-1");
+    //ReactGA.pageview(window.location.pathname + window.location.search);
     /*ReactGA.initialize("G-6NWXFDQXSZ");
     ReactGA.pageview(window.location.pathname + window.location.search);*/
 
@@ -25,12 +26,13 @@ const PageContainer = () => {
     );
 
     return <>
-        <TopMenuContainer timetableRef={timetableRef} />
+        <LeftMenuContainer />
+        {/*<TopMenuContainer timetableRef={timetableRef} />
         <ContentContainer timetableRef={timetableRef} />
-        <FooterContainer />
-        {
+        <FooterContainer />*/}
+        {/*
             loading ? <Loader /> : <></>
-        }
+        */}
     </>
 };
 

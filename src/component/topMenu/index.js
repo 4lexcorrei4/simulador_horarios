@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.css";
 import {useDispatch, useSelector} from "react-redux";
-import {actions} from "../../redux/duck/redux.duck";
+import {actions} from "../../redux/duck/old_redux.duck";
 import {NavLink} from "react-router-dom";
 import {toPng} from "html-to-image";
 import $ from "jquery";
