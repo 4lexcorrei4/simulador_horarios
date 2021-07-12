@@ -4,9 +4,12 @@ import conf from "../conf";
 import {useSelector} from "react-redux";
 
 const LeftMenuContainer = () => {
+    const subjects = useSelector(state => state.redux.subject.chosen);
+
     return <LeftMenu
         logo={conf.logo}
         name={conf.name}
+        subjects={subjects}
     />
 };
 

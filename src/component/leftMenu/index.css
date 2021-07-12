@@ -1,5 +1,5 @@
 #leftMenu {
-    width: 100px;
+    width: 150px;
     height: 100vh;
     display: flex;
     flex-flow: column;
@@ -9,10 +9,17 @@
     background-color: var(--menu-bg-color);
 }
 
+#leftMenu .top,
+#leftMenu .bottom {
+    width: 100%;
+}
+
 #leftMenu .logo {
     background-color: var(--menu-bg-color-logo);
-    width: calc(100% - 40px);
-    padding: 20px;
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
 }
 
 #leftMenu .logo img {
@@ -27,8 +34,43 @@
 }
 
 #leftMenu .option {
-    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: box-shadow 0.5s;
+}
+#leftMenu .option:hover {
+    box-shadow: 0 0 2px 2px gray;
+}
+
+#leftMenu .option .content {
+    background-color: var(--menu-option-content-bg-color);
+    padding: 3px 5px;
+    width: calc(75% - 10px);
+    border-radius: 5px 0 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+#leftMenu .option .symbol {
+    background-color: var(--menu-option-symbol-bg-color);
+    border-radius: 0 5px 5px 0;
+    padding: 2px 0;
+    width: 25%;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--menu-option-symbol-color);
+    cursor: pointer;
+}
+#leftMenu .option .symbol.green {
+    background-color: var(--menu-option-symbol-bg-color-green);
+}
+#leftMenu .option .symbol.red {
+    background-color: var(--menu-option-symbol-bg-color-red);
 }

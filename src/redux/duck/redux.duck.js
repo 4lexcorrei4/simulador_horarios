@@ -21,7 +21,9 @@ const initialState = {
     },
     subject: {
         all: [],
-        chosen: {}
+        chosen: {
+            "12423": {"id": 12423, "short": "AP", "name": "Aprendizagem Profunda"}
+        }
     },
     shifts: {},
     classes: {},
