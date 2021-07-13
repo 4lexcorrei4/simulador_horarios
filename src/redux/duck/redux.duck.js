@@ -10,11 +10,14 @@ import conf from "../../conf";
 //const swal = withReactContent(Swal);
 
 export const types = {
-    Init: "[Redux] Init"
+    Init: "[Redux] Init",
+    SetPopup: "[Redux] SetPopup",
+    ClearPopup: "[Redux] ClearPopup"
 };
 
 const initialState = {
     view: undefined,
+    theme: "light",
     department: {
         all: [],
         chosen: undefined
@@ -25,16 +28,33 @@ const initialState = {
             "12423": {"id": 12423, "short": "AP", "name": "Aprendizagem Profunda"}
         }
     },
-    shifts: {},
-    classes: {},
+    shift: {
+        all: {},
+        chosen: {}
+    },
     loading: true,
-    lastUpdate: undefined
+    updateTime: {
+        "departments": undefined,
+        "subjects": undefined,
+        "shifts": undefined
+    },
+    popup: undefined
 };
 
 export const reducer = persistReducer(
-    {storage, key: "simulador-horarios"},
+    {storage, key: "simulador-horarios-v2"},
     (state = initialState, action) => {
         switch (action.type) {
+            case types.SetPopup: {
+                const new_state = {...state};
+                new_state.popup = action.payload;
+                return new_state;
+            }
+            case types.ClearPopup: {
+                const new_state = {...state};
+                new_state.popup = undefined;
+                return new_state;
+            }
             /*case types.Set: {
                 const newState = {...state};
                 newState[action.payload.name] = action.payload.content;
@@ -175,10 +195,16 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-    init: () => ({ type: types.Init })
+    init: () => ({ type: types.Init }),
+    setPopup: (option) => ({ type: types.SetPopup, payload: option }),
+    clearPopup: () => ({ type: types.ClearPopup })
 };
 
 export function* saga() {
+    yield takeLatest(types.Init, function* () {
+        // check if selected subjects still exist
+        // check shifts updates
+    });
     /*yield takeLatest(types.Init, function* () {
         yield put(actions.getDepartments());
 

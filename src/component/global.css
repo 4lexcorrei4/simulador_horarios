@@ -2,15 +2,21 @@
     width: 100%;
     height: 100vh;
 
-    --menu-border: #aaa;
+    --menu-border: rgba(170, 170, 170, 1);
+    --menu-option-border: rgba(85, 85, 85, 0.5);
     --menu-bg-color: rgba(152, 202, 216, 1);
     --menu-bg-color-hover: rgba(132, 182, 196, 1);
     --menu-bg-color-logo: rgba(122, 172, 186, 1);
     --menu-option-content-bg-color: rgba(122, 172, 186, 1);
+    --menu-option-content-bg-color-hover: rgba(102, 152, 166, 1);
     --menu-option-symbol-bg-color: rgba(102, 152, 166, 1);
     --menu-option-symbol-bg-color-green: rgba(20, 150, 20, 1);
     --menu-option-symbol-bg-color-red: rgba(150, 20, 20, 1);
     --menu-option-symbol-color: rgba(255, 255, 255, 1);
+
+    --popup-container-bg-color: rgba(100, 100, 100, 0.5);
+    --popup-content-container-bg-color: rgba(255, 255, 255, 0.9);
+    --popup-content-container-box-shadow: rgba(255, 255, 255, 0.5);
     /*--top-menu-bg-color: rgba(32, 82, 96, 0.5);
     --top-menu-bg-color-hover: rgba(32, 82, 96, 0.8);
     --top-menu-color: rgba(250, 250, 250, 1);

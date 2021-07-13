@@ -14,6 +14,12 @@
     width: 100%;
 }
 
+#leftMenu .bottom {
+    border-top: 1px solid var(--menu-option-border);
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
 #leftMenu .logo {
     background-color: var(--menu-bg-color-logo);
     width: 100%;
@@ -31,6 +37,13 @@
     padding: 5px 5px 0 5px;
     text-align: center;
     text-transform: uppercase;
+    font-weight: bold;
+}
+
+#leftMenu .sub-title {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
 }
 
 #leftMenu .option {
@@ -49,11 +62,18 @@
     background-color: var(--menu-option-content-bg-color);
     padding: 3px 5px;
     width: calc(75% - 10px);
-    border-radius: 5px 0 0 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 14px;
     white-space: nowrap;
+    border-left: 1px solid var(--menu-option-border);
+}
+#leftMenu .option .content:first-child {
+    border-radius: 5px 0 0 5px;
+    border-left: none;
+}
+#leftMenu .option .content:last-child {
+    border-radius: 0 5px 5px 0;
 }
 
 #leftMenu .option .symbol {
@@ -61,6 +81,7 @@
     border-radius: 0 5px 5px 0;
     padding: 2px 0;
     width: 25%;
+    height: 20px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -73,4 +94,34 @@
 }
 #leftMenu .option .symbol.red {
     background-color: var(--menu-option-symbol-bg-color-red);
+}
+
+#leftMenu .option.vertical {
+    display: flex;
+    flex-flow: column;
+    margin-top: 3px;
+    transition: box-shadow 0.5s;
+}
+#leftMenu .option.vertical:hover {
+    box-shadow: none;
+}
+#leftMenu .option.vertical .content {
+    width: calc(100% - 10px);
+    border-left: none;
+    border-top: 1px solid var(--menu-option-border);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+#leftMenu .option.vertical .content:first-child {
+    border-radius: 5px 5px 0 0;
+    border-top: none;
+}
+#leftMenu .option.vertical .content:last-child {
+    border-radius: 0 0 5px 5px;
+}
+
+#leftMenu .option.vertical .content:hover,
+#leftMenu .option.vertical .content.selected {
+    background-color: var(--menu-option-content-bg-color-hover);
 }
