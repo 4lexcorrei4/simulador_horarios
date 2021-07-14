@@ -2,6 +2,9 @@
     width: 100%;
     height: 100vh;
 
+    --loading-wheel-color: rgba(52, 102, 116, 0.5);
+    --loading-wheel-loader-color: rgba(0, 42, 46, 0.5);
+
     --menu-border: rgba(170, 170, 170, 1);
     --menu-option-border: rgba(85, 85, 85, 0.5);
     --menu-bg-color: rgba(152, 202, 216, 1);

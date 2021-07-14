@@ -1,4 +1,4 @@
-import {put, takeLatest, select, all} from "redux-saga/effects";
+/*import {put, takeLatest, select, all} from "redux-saga/effects";
 import {persistReducer} from "redux-persist";
 import {useHistory} from "react-router-dom";
 import storage from "redux-persist/lib/storage";
@@ -403,3 +403,4 @@ export function* saga() {
         yield put(actions.lastUpdate(data));
     });
 }
+*/

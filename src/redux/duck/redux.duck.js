@@ -11,8 +11,14 @@ import conf from "../../conf";
 
 export const types = {
     Init: "[Redux] Init",
+    InitEnd: "[Redux] InitEnd",
     SetPopup: "[Redux] SetPopup",
-    ClearPopup: "[Redux] ClearPopup"
+    SetPopupEnd: "[Redux] SetPopupEnd",
+    ClearPopup: "[Redux] ClearPopup",
+    SetDepartments: "[Redux] SetDepartments",
+    SetDepartment: "[Redux] SetDepartment",
+    SetSubjects: "[Redux] SetSubjects",
+    AddSubject: "[Redux] AddSubject"
 };
 
 const initialState = {
@@ -24,9 +30,7 @@ const initialState = {
     },
     subject: {
         all: [],
-        chosen: {
-            "12423": {"id": 12423, "short": "AP", "name": "Aprendizagem Profunda"}
-        }
+        chosen: {}
     },
     shift: {
         all: {},
@@ -45,15 +49,68 @@ export const reducer = persistReducer(
     {storage, key: "simulador-horarios-v2"},
     (state = initialState, action) => {
         switch (action.type) {
+            case types.InitEnd: {
+                return {
+                    ...state,
+                    loading: false
+                };
+            }
             case types.SetPopup: {
-                const new_state = {...state};
-                new_state.popup = action.payload;
-                return new_state;
+                return {
+                    ...state,
+                    popup: action.payload,
+                    loading: true
+                };
+            }
+            case types.SetPopupEnd: {
+                return {
+                    ...state,
+                    loading: false
+                }
             }
             case types.ClearPopup: {
-                const new_state = {...state};
-                new_state.popup = undefined;
-                return new_state;
+                return {
+                    ...state,
+                    popup: undefined
+                }
+            }
+            case types.SetDepartments: {
+                return {
+                    ...state,
+                    department: {
+                        ...state.department,
+                        all: action.payload
+                    }
+                }
+            }
+            case types.SetDepartment: {
+                return {
+                    ...state,
+                    department: {
+                        ...state.department,
+                        chosen: action.payload
+                    }
+                }
+            }
+            case types.SetSubjects: {
+                return {
+                    ...state,
+                    subject: {
+                        ...state.subject,
+                        all: action.payload
+                    }
+                }
+            }
+            case types.AddSubject: {
+                const chosen_subjects = {...state.subject.chosen};
+                chosen_subjects[action.payload.id] = action.payload;
+                return {
+                    ...state,
+                    subject: {
+                        ...state.subject,
+                        chosen: {...chosen_subjects}
+                    }
+                }
             }
             /*case types.Set: {
                 const newState = {...state};
@@ -196,14 +253,32 @@ export const reducer = persistReducer(
 
 export const actions = {
     init: () => ({ type: types.Init }),
+    initEnd: () => ({ type: types.InitEnd }),
     setPopup: (option) => ({ type: types.SetPopup, payload: option }),
-    clearPopup: () => ({ type: types.ClearPopup })
+    setPopupEnd: () => ({ type: types.SetPopupEnd }),
+    clearPopup: () => ({ type: types.ClearPopup }),
+    setDepartments: (values) => ({ type: types.SetDepartments, payload: values }),
+    setDepartment: (value) => ({ type: types.SetDepartment, payload: value }),
+    setSubjects: (values) => ({ type: types.SetSubjects, payload: values }),
+    addSubject: (value) => ({ type: types.AddSubject, payload: value })
 };
 
 export function* saga() {
     yield takeLatest(types.Init, function* () {
         // check if selected subjects still exist
         // check shifts updates
+        yield put(actions.initEnd());
+    });
+    yield takeLatest(types.SetPopup, function* ({payload: option}) {
+        if (option == "add-subject") {
+            const {data} = yield api.getDepartments();
+            yield put(actions.setDepartments(data));
+        }
+        yield put(actions.setPopupEnd());
+    });
+    yield takeLatest(types.SetDepartment, function* ({payload: value}) {
+        const {data: {subjects}} = yield api.getDepartmentSubjects(value);
+        yield put(actions.setSubjects(subjects));
     });
     /*yield takeLatest(types.Init, function* () {
         yield put(actions.getDepartments());

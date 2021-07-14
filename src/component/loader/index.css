@@ -1,4 +1,4 @@
-.loaderContainer {
+.loader-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -8,16 +8,18 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(100, 100, 100, 0.5);
+    z-index: 899;
 }
 
 .loader {
-    border: 10px solid var(--sub-top-menu-bg-color);
+    border: 10px solid var(--loading-wheel-color);
     border-radius: 50%;
     height: 100px;
     width: 100px;
-    border-top: 10px solid var(--top-menu-bg-color);
+    border-top: 10px solid var(--loading-wheel-loader-color);
     -webkit-animation: spin 2s linear infinite; /* Safari */
     animation: spin 2s linear infinite;
+    z-index: 900;
 }
 
 /* Safari */
