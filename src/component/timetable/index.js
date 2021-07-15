@@ -5,8 +5,9 @@ import {actions} from "../../redux/duck/old_redux.duck";
 import {useDispatch} from "react-redux";
 import ElementTD from "../elementTd";
 
-const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetableRef}) => {
+const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts, timetableRef, update_time}) => {
     const dispatch = useDispatch();
+    console.log(update_time)
 
     const onMouseOver = (id, subject) => {
         $("." + id).addClass("hover");
@@ -19,7 +20,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
     };
 
     const saveOrRemoveClass = (subject, type, number) => {
-        if (chosenClasses[subject] && chosenClasses[subject][type] && chosenClasses[subject][type][number])
+        if (chosenShifts[subject] && chosenShifts[subject][type] && chosenShifts[subject][type][number])
             dispatch(actions.removeClass(subject, type, number));
         else
             dispatch(actions.addClass(subject, type, number));
@@ -30,12 +31,12 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
             <thead>
                 <tr>
                     <th>Hora</th>
-                    <th colSpan={maxClasses[0]}>2ª (Seg)</th>
-                    <th colSpan={maxClasses[1]}>3ª (Ter)</th>
-                    <th colSpan={maxClasses[2]}>4ª (Qua)</th>
-                    <th colSpan={maxClasses[3]}>5ª (Qui)</th>
-                    <th colSpan={maxClasses[4]}>6ª (Sex)</th>
-                    <th colSpan={maxClasses[5]}>Sábado</th>
+                    <th colSpan={maxCellShifts[0]}>2ª (Seg)</th>
+                    <th colSpan={maxCellShifts[1]}>3ª (Ter)</th>
+                    <th colSpan={maxCellShifts[2]}>4ª (Qua)</th>
+                    <th colSpan={maxCellShifts[3]}>5ª (Qui)</th>
+                    <th colSpan={maxCellShifts[4]}>6ª (Sex)</th>
+                    <th colSpan={maxCellShifts[5]}>Sábado</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,8 +55,8 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
                         {
                             [0, 1, 2, 3, 4, 5].map(day => <>
                                 {
-                                    filled[hours.indexOf(hour)][day]
-                                        ? classes[hours.indexOf(hour)][day].sort(
+                                    cellFilling[hours.indexOf(hour)][day]
+                                        ? cellShifts[hours.indexOf(hour)][day].sort(
                                             (a, b) => {
                                                 if (a.subject.abbreviation != b.subject.abbreviation)
                                                     return a.subject.abbreviation > b.subject.abbreviation;
@@ -70,7 +71,7 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
                                                 onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number, shiftInfo.subject.id)}
                                             >
                                                 {
-                                                        chosenClasses[shiftInfo.subject.id] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name] && chosenClasses[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
+                                                        chosenShifts[shiftInfo.subject.id] && chosenShifts[shiftInfo.subject.id][shiftInfo.shift.type.name] && chosenShifts[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
                                                             ? <div className="save" title="Remover"
                                                                    onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#10005;</div>
                                                             : <div className="save" title="Guardar"
@@ -80,11 +81,11 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
                                                 <p><a href={shiftInfo.shift.url ? shiftInfo.shift.url : "javascript:;"} target={shiftInfo.shift.url ? "_blank" : ""}><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span></a><br />{shiftInfo.shift.room}</p>
                                             </td>
                                         )
-                                        : <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
+                                        : <ElementTD times={maxCellShifts[day] - cellFilling[hours.indexOf(hour)][day]} />
                                 }
                                 {
-                                    maxClasses[day] > filled[hours.indexOf(hour)][day] && filled[hours.indexOf(hour)][day]
-                                        ? <ElementTD times={maxClasses[day] - filled[hours.indexOf(hour)][day]} />
+                                    maxCellShifts[day] > cellFilling[hours.indexOf(hour)][day] && cellFilling[hours.indexOf(hour)][day]
+                                        ? <ElementTD times={maxCellShifts[day] - cellFilling[hours.indexOf(hour)][day]} />
                                         : <></>
                                 }
                                 </>
@@ -95,6 +96,9 @@ const Timetable = ({maxClasses, hours, classes, filled, chosenClasses, timetable
             }
             </tbody>
         </table>
+        <span id="update-time">
+            Última atualização: {update_time ? update_time.getDate() + "/" + (update_time.getMonth() + 1) + "/" + update_time.getFullYear() + ", " + update_time.getHours() + ":" + update_time.getMinutes() : ""}
+        </span>
     </>
 };
 

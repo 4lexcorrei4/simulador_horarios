@@ -83,3 +83,34 @@
 #popup-content #add-subject .block .option-block span {
     margin-right: 5px;
 }
+
+#popup-content #add-subject .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding-top: 10px;
+}
+
+#popup-content #add-subject .buttons div {
+    margin-left: 5px;
+}
+
+#popup-content #add-subject .buttons .add {
+    background-color: var(--menu-option-content-bg-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+#popup-content #add-subject .buttons .disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+#popup-content #add-subject .buttons .add:hover {
+    box-shadow: 0 0 2px 2px gray;
+}
+#popup-content #add-subject .buttons .disabled:hover {
+    box-shadow: none;
+}

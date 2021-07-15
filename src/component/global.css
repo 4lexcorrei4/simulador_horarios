@@ -37,7 +37,14 @@ a:active {
     color: #000;
 }
 
+#root {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
 #content {
-    overflow-y: auto;
-    height: calc(100vh - 125px - 50px);
+    width: calc(100% - 150px - 20px);
+    height: calc(100vh - 20px);
+    padding: 10px;
 }

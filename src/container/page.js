@@ -31,14 +31,14 @@ const PageContainer = () => {
 
     return <>
         <LeftMenuContainer />
+        <ContentContainer timetableRef={timetableRef} />
         {
-            popup ? <Popup loading={loading} option={popup} close={closePopup} /> : <></>
+            popup ? <Popup loading={loading} option={popup} closePopup={closePopup} /> : <></>
         }
         {
             loading ? <Loader /> : <></>
         }
         {/*<TopMenuContainer timetableRef={timetableRef} />
-        <ContentContainer timetableRef={timetableRef} />
         <FooterContainer />*/}
         {/*
             loading ? <Loader /> : <></>

@@ -11,9 +11,8 @@ const LeftMenuContainer = () => {
     const view = useSelector(state => state.redux.view);
     const theme = useSelector(state => state.redux.theme);
 
-    const setPopup = (option) => {
-        dispatch(actions.setPopup(option));
-    };
+    const setPopup = (option) => dispatch(actions.setPopup(option));
+    const removeSubject = (id) => dispatch(actions.removeSubject(id));
 
     return <LeftMenu
         logo={conf.logo}
@@ -22,6 +21,7 @@ const LeftMenuContainer = () => {
         view={view}
         theme={theme}
         setPopup={setPopup}
+        removeSubject={removeSubject}
     />
 };
 

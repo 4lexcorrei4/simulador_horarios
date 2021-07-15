@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {actions} from "../../redux/duck/redux.duck";
 import $ from "jquery";
 
-const PopupAddSubject = ({departments, department, subjects, subject}) => {
+const PopupAddSubject = ({departments, department, subjects, subject, closePopup}) => {
     const dispatch = useDispatch();
 
     const [subjectInfo, setSubjectInfo] = useState(undefined);
@@ -31,8 +31,14 @@ const PopupAddSubject = ({departments, department, subjects, subject}) => {
         }
     };
 
-    const chooseSubject = (sub) => {
-        dispatch(actions.addSubject(sub));
+    const chooseSubject = () => {
+        dispatch(actions.addSubject(subjectInfo));
+        setSubjectInfo(undefined);
+    };
+
+    const chooseSubjectAndClose = () => {
+        chooseSubject();
+        closePopup();
     };
 
     return <div id="add-subject">
@@ -42,7 +48,7 @@ const PopupAddSubject = ({departments, department, subjects, subject}) => {
                 <h4>Departamento</h4>
                 <div>
                     <span>{chosenDepartment ? "(" + chosenDepartment.short + ") " + chosenDepartment.name : ""}</span>
-                    <input list="departments" id="department-choose" onChange={() => chooseDepartment()} />
+                    <input list="departments" id="department-choose" onChange={() => chooseDepartment()} placeholder="Pesquisar" />
                     <datalist id="departments">
                         {
                             departments.map(dep =>
@@ -55,11 +61,11 @@ const PopupAddSubject = ({departments, department, subjects, subject}) => {
             <div className="option-block">
                 <h4>Cadeira</h4>
                 <div>
-                    <input list="subjects" id="subject-choose" onChange={() => addSubject()} />
+                    <input list="subjects" id="subject-choose" onChange={() => addSubject()} placeholder="Pesquisar" />
                     <datalist id="subjects">
                         {
                             subjects.map(sub =>
-                                (!subjectInfo || subjectInfo.id != sub.id) ? <option value={sub.id} label={"(" + sub.short + ") " + sub.name} /> : <></>
+                                (!subjectInfo || subjectInfo.id != sub.id) && (!Object.keys(subject).includes(String(sub.id))) ? <option value={sub.id} label={"(" + sub.short + ") " + sub.name} /> : <></>
                             )
                         }
                     </datalist>
@@ -85,6 +91,14 @@ const PopupAddSubject = ({departments, department, subjects, subject}) => {
                 <div>
                     <span>{subjectInfo ? subjectInfo.name : ""}</span>
                 </div>
+            </div>
+        </div>
+        <div className="buttons">
+            <div className={"add" + (!subjectInfo ? " disabled" : "")} onClick={() => chooseSubject()}>
+                Adicionar
+            </div>
+            <div className={"add" + (!subjectInfo ? " disabled" : "")} onClick={() => chooseSubjectAndClose()}>
+                Adicionar e Fechar
             </div>
         </div>
     </div>

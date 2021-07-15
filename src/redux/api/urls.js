@@ -1,7 +1,8 @@
 const urls = {
     base: () => "http://localhost:5000",
     departments: () => urls.base() + "/departments",
-    departmentSubjects: (depId) => urls.departments() + "/" + depId + "/subjects"
+    departmentSubjects: (depId) => urls.departments() + "/" + depId + "/subjects",
+    updates: () => urls.base() + "/updates"
 
     /*lastUpdate: (year, time) => "https://api.horarios.bitsys.tech/lastupdate?year=" + year + "&time=" + time,
     departments: () => urls.base() + "/departments",

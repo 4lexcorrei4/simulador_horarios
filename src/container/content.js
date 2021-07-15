@@ -1,40 +1,40 @@
 import React from "react";
 import Timetable from "../component/timetable";
 import {useSelector} from "react-redux";
-import TopMenuContainer from "./topMenu";
 
 const ContentContainer = ({timetableRef}) => {
-    const shifts = useSelector(state => state.redux.shifts);
-    const chosenClasses = useSelector(state => state.redux.classes);
+    const shifts = useSelector(state => state.redux.shift.all);
+    const chosenShifts = useSelector(state => state.redux.shift.chosen);
     const view = useSelector(state => state.redux.view);
+    const update_time = new Date(useSelector(state => state.redux.updateTime.time));
 
     const hours = [];
     for (let current = 8; current <= 23.5; current = current + 0.5)
         hours.push(current * 60);
 
-    const classes = [];
-    const filled = [];
+    const cellShifts = [];
+    const cellFilling = [];
     hours.map(() => {
-        let hour1 = [];
-        let hour2 = [];
+        let hourCellShifts = [];
+        let hourCellFilling = [];
         [1, 2, 3, 4, 5, 6].map(() => {
-            hour1.push([]);
-            hour2.push(0);
+            hourCellShifts.push([]);
+            hourCellFilling.push(0);
         })
-        classes.push(hour1);
-        filled.push(hour2);
+        cellShifts.push(hourCellShifts);
+        cellFilling.push(hourCellFilling);
     });
 
-    const maxClasses = [1, 1, 1, 1, 1, 1];
+    const maxCellShifts = [1, 1, 1, 1, 1, 1];
 
-    let showShifts = view == "chosen" ? chosenClasses : shifts;
+    let showShifts = view == "chosen" ? chosenShifts : shifts;
 
     Object.keys(showShifts).map(subject => {
         Object.keys(showShifts[subject]).map(type => {
             Object.keys(showShifts[subject][type]).map(number => {
                     let shiftInfo = showShifts[subject][type][number];
                     shiftInfo.shift.instances.map(instance => {
-                        classes[hours.indexOf(instance.start)][instance.weekday].push({
+                        cellShifts[hours.indexOf(instance.start)][instance.day].push({
                             subject: shiftInfo.subject,
                             shift: {
                                 ...instance,
@@ -43,8 +43,8 @@ const ContentContainer = ({timetableRef}) => {
                             }
                         });
                         for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration); hour++) {
-                            filled[hour][instance.weekday]++;
-                            maxClasses[instance.weekday] = Math.max(maxClasses[instance.weekday], filled[hour][instance.weekday]);
+                            cellFilling[hour][instance.day]++;
+                            maxCellShifts[instance.day] = Math.max(maxCellShifts[instance.day], cellFilling[hour][instance.day]);
                         }
                     });
                 }
@@ -54,12 +54,13 @@ const ContentContainer = ({timetableRef}) => {
 
     return <div id="content">
         <Timetable
-            maxClasses={maxClasses}
+            maxCellShifts={maxCellShifts}
             hours={hours}
-            classes={classes}
-            filled={filled}
-            chosenClasses={chosenClasses}
+            cellShifts={cellShifts}
+            cellFilling={cellFilling}
+            chosenShifts={chosenShifts}
             timetableRef={timetableRef}
+            update_time={update_time}
         />
     </div>
 };

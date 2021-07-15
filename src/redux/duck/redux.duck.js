@@ -15,10 +15,14 @@ export const types = {
     SetPopup: "[Redux] SetPopup",
     SetPopupEnd: "[Redux] SetPopupEnd",
     ClearPopup: "[Redux] ClearPopup",
+    GetDepartments: "[Redux] GetDepartments",
     SetDepartments: "[Redux] SetDepartments",
     SetDepartment: "[Redux] SetDepartment",
     SetSubjects: "[Redux] SetSubjects",
-    AddSubject: "[Redux] AddSubject"
+    AddSubject: "[Redux] AddSubject",
+    RemoveSubject: "[Redux] RemoveSubject",
+    GetUpdateTime: "[Redux] GetUpdateTime",
+    SetUpdateTime: "[Redux] SetUpdateTime"
 };
 
 const initialState = {
@@ -40,7 +44,8 @@ const initialState = {
     updateTime: {
         "departments": undefined,
         "subjects": undefined,
-        "shifts": undefined
+        "shifts": undefined,
+        "time": undefined
     },
     popup: undefined
 };
@@ -110,6 +115,23 @@ export const reducer = persistReducer(
                         ...state.subject,
                         chosen: {...chosen_subjects}
                     }
+                }
+            }
+            case types.RemoveSubject: {
+                const chosen_subjects = {...state.subject.chosen};
+                delete chosen_subjects[action.payload];
+                return {
+                    ...state,
+                    subject: {
+                        ...state.subject,
+                        chosen: {...chosen_subjects}
+                    }
+                }
+            }
+            case types.SetUpdateTime: {
+                return {
+                    ...state,
+                    updateTime: action.payload
                 }
             }
             /*case types.Set: {
@@ -257,10 +279,13 @@ export const actions = {
     setPopup: (option) => ({ type: types.SetPopup, payload: option }),
     setPopupEnd: () => ({ type: types.SetPopupEnd }),
     clearPopup: () => ({ type: types.ClearPopup }),
+    getDepartments: () => ({ type: types.GetDepartments }),
     setDepartments: (values) => ({ type: types.SetDepartments, payload: values }),
     setDepartment: (value) => ({ type: types.SetDepartment, payload: value }),
     setSubjects: (values) => ({ type: types.SetSubjects, payload: values }),
-    addSubject: (value) => ({ type: types.AddSubject, payload: value })
+    addSubject: (value) => ({ type: types.AddSubject, payload: value }),
+    removeSubject: (value) => ({ type: types.RemoveSubject, payload: value }),
+    setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times })
 };
 
 export function* saga() {
@@ -271,10 +296,28 @@ export function* saga() {
     });
     yield takeLatest(types.SetPopup, function* ({payload: option}) {
         if (option == "add-subject") {
-            const {data} = yield api.getDepartments();
-            yield put(actions.setDepartments(data));
+            yield put(actions.getDepartments());
         }
         yield put(actions.setPopupEnd());
+    });
+    yield takeLatest(types.GetDepartments, function* () {
+        let update_times = {};
+        let my_update_time;
+        {
+            const {data} = yield api.getUpdates();
+            update_times = data;
+            my_update_time = yield select(state => state.redux.updateTime.department);
+        }
+        if (!my_update_time || new Date(my_update_time) < new Date(update_times.departments)) {
+            const {data} = yield api.getDepartments();
+            yield put(actions.setDepartments(data));
+            let time = new Date(update_times.departments) > new Date(update_times.subjects) ? update_times.departments : update_times.subjects;
+            time = new Date(time) > new Date(update_times.shifts) ? time : update_times.shifts;
+            yield put(actions.setUpdateTime({
+                ...update_times,
+                time: time
+            }));
+        }
     });
     yield takeLatest(types.SetDepartment, function* ({payload: value}) {
         const {data: {subjects}} = yield api.getDepartmentSubjects(value);
