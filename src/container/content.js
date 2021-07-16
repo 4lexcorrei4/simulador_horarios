@@ -32,15 +32,13 @@ const ContentContainer = ({timetableRef}) => {
     Object.keys(showShifts).map(subject => {
         Object.keys(showShifts[subject]).map(type => {
             Object.keys(showShifts[subject][type]).map(number => {
-                    let shiftInfo = showShifts[subject][type][number];
-                    shiftInfo.shift.instances.map(instance => {
+                    let shift_info = showShifts[subject][type][number];
+                    shift_info.instances.map(instance => {
                         cellShifts[hours.indexOf(instance.start)][instance.day].push({
-                            subject: shiftInfo.subject,
-                            shift: {
-                                ...instance,
-                                number: shiftInfo.shift.number,
-                                type: shiftInfo.shift.type
-                            }
+                            ...instance,
+                            subject: shift_info.subject,
+                            type: shift_info.type,
+                            number: shift_info.number
                         });
                         for (let hour = hours.indexOf(instance.start); hour < hours.indexOf(instance.start) + (instance.duration); hour++) {
                             cellFilling[hour][instance.day]++;

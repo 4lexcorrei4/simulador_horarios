@@ -29,24 +29,24 @@ const conf = {
     },
     timeType: (time) => {
         switch (time) {
-            case "1": return "a"; break;
-            case "2": return "s"; break;
-            case "3": return "s"; break;
-            case "4": return "t"; break;
-            case "5": return "t"; break;
-            case "6": return "t"; break;
-            case "7": return "t"; break;
+            case 1: return "a"; break;
+            case 2: return "s"; break;
+            case 3: return "s"; break;
+            case 4: return "t"; break;
+            case 5: return "t"; break;
+            case 6: return "t"; break;
+            case 7: return "t"; break;
         }
     },
     timeNumber: (time) => {
         switch (time) {
-            case "1": return 1; break;
-            case "2": return 1; break;
-            case "3": return 2; break;
-            case "4": return 1; break;
-            case "5": return 2; break;
-            case "6": return 3; break;
-            case "7": return 4; break;
+            case 1: return 1; break;
+            case 2: return 1; break;
+            case 3: return 2; break;
+            case 4: return 1; break;
+            case 5: return 2; break;
+            case 6: return 3; break;
+            case 7: return 4; break;
         }
     }
 };

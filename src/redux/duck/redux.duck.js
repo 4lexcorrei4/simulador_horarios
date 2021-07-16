@@ -22,7 +22,9 @@ export const types = {
     AddSubject: "[Redux] AddSubject",
     RemoveSubject: "[Redux] RemoveSubject",
     GetUpdateTime: "[Redux] GetUpdateTime",
-    SetUpdateTime: "[Redux] SetUpdateTime"
+    SetUpdateTime: "[Redux] SetUpdateTime",
+    AddSubjectShifts: "[Redux] AddSubjectShifts",
+    RemoveSubjectShifts: "[Redux] RemoveSubjectShifts"
 };
 
 const initialState = {
@@ -132,6 +134,28 @@ export const reducer = persistReducer(
                 return {
                     ...state,
                     updateTime: action.payload
+                }
+            }
+            case types.AddSubjectShifts: {
+                const all_shifts = {...state.shift.all};
+                all_shifts[action.payload.id] = action.payload.shifts;
+                return {
+                    ...state,
+                    shift: {
+                        ...state.shift,
+                        all: all_shifts
+                    }
+                }
+            }
+            case types.RemoveSubjectShifts: {
+                const all_shifts = {...state.shift.all};
+                delete all_shifts[action.payload];
+                return {
+                    ...state,
+                    shift: {
+                        ...state.shift,
+                        all: all_shifts
+                    }
                 }
             }
             /*case types.Set: {
@@ -285,7 +309,9 @@ export const actions = {
     setSubjects: (values) => ({ type: types.SetSubjects, payload: values }),
     addSubject: (value) => ({ type: types.AddSubject, payload: value }),
     removeSubject: (value) => ({ type: types.RemoveSubject, payload: value }),
-    setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times })
+    setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times }),
+    addSubjectShifts: (id, shifts) => ({ type: types.AddSubjectShifts, payload: {id, shifts} }),
+    removeSubjectShifts: (id) => ({ type: types.RemoveSubjectShifts, payload: id })
 };
 
 export function* saga() {
@@ -322,6 +348,39 @@ export function* saga() {
     yield takeLatest(types.SetDepartment, function* ({payload: value}) {
         const {data: {subjects}} = yield api.getDepartmentSubjects(value);
         yield put(actions.setSubjects(subjects));
+    });
+    yield takeLatest(types.AddSubject, function* ({payload: value}) {
+        const depId = yield select(state => state.redux.department.chosen);
+        const {data: {subject, shifts}} = yield api.getSubject(depId, value.id);
+        const {data: {year, timeId}} = yield api.getTime();
+        const shifts_infos = {};
+        shifts.map(shift => {
+            shift.instances.map(instance => {
+                instance.duration /= 30;
+                instance.url = "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular/actividade/turnos" +
+                    "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
+                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject.id +
+                    "&tipo=" + conf.classesTypesCLIP(shift.type.id) + "&n%BA=" + shift.number;
+            })
+            shift.type = {
+                ...shift.type,
+                name: conf.classesTypes(shift.type.id),
+                title: shift.type.name
+            }
+            if (!shifts_infos[shift.type.name])
+                shifts_infos[shift.type.name] = {}
+            shift.subject = {
+                ...subject,
+                url: "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular" +
+                    "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
+                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject.id
+            };
+            shifts_infos[shift.type.name][shift.number] = shift;
+        });
+        yield put(actions.addSubjectShifts(subject.id, shifts_infos));
+    });
+    yield takeLatest(types.RemoveSubject, function* ({payload: value}) {
+        yield put(actions.removeSubjectShifts(value));
     });
     /*yield takeLatest(types.Init, function* () {
         yield put(actions.getDepartments());

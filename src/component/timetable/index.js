@@ -7,7 +7,6 @@ import ElementTD from "../elementTd";
 
 const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts, timetableRef, update_time}) => {
     const dispatch = useDispatch();
-    console.log(update_time)
 
     const onMouseOver = (id, subject) => {
         $("." + id).addClass("hover");
@@ -58,27 +57,27 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
                                     cellFilling[hours.indexOf(hour)][day]
                                         ? cellShifts[hours.indexOf(hour)][day].sort(
                                             (a, b) => {
-                                                if (a.subject.abbreviation != b.subject.abbreviation)
-                                                    return a.subject.abbreviation > b.subject.abbreviation;
+                                                if (a.subject.short != b.subject.short)
+                                                    return a.subject.short > b.subject.short;
                                                 else
-                                                    return a.shift.number > b.shift.number;
+                                                    return a.number > b.number;
                                             }
-                                        ).map(shiftInfo =>
+                                        ).map(shift_info =>
                                             <td
-                                                rowSpan={shiftInfo.shift.duration}
-                                                className={`class ${shiftInfo.shift.type.name} ${shiftInfo.subject.id} ${shiftInfo.subject.id}-${shiftInfo.shift.type.name}-${shiftInfo.shift.number}`}
-                                                onMouseOver={() => onMouseOver(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number, shiftInfo.subject.id)}
-                                                onMouseLeave={() => onMouseLeave(shiftInfo.subject.id + "-" + shiftInfo.shift.type.name + "-" + shiftInfo.shift.number, shiftInfo.subject.id)}
+                                                rowSpan={shift_info.duration}
+                                                className={`class ${shift_info.type.name} ${shift_info.subject.id} ${shift_info.subject.id}-${shift_info.type.name}-${shift_info.number}`}
+                                                onMouseOver={() => onMouseOver(shift_info.subject.id + "-" + shift_info.type.name + "-" + shift_info.number, shift_info.subject.id)}
+                                                onMouseLeave={() => onMouseLeave(shift_info.subject.id + "-" + shift_info.type.name + "-" + shift_info.number, shift_info.subject.id)}
                                             >
                                                 {
-                                                        chosenShifts[shiftInfo.subject.id] && chosenShifts[shiftInfo.subject.id][shiftInfo.shift.type.name] && chosenShifts[shiftInfo.subject.id][shiftInfo.shift.type.name.toLowerCase()][shiftInfo.shift.number]
+                                                        chosenShifts[shift_info.subject.id] && chosenShifts[shift_info.subject.id][shift_info.type.name] && chosenShifts[shift_info.subject.id][shift_info.type.name.toLowerCase()][shift_info.number]
                                                             ? <div className="save" title="Remover"
-                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#10005;</div>
+                                                                   onClick={() => saveOrRemoveClass(shift_info.subject.id, shift_info.type.name, shift_info.number)}>&#10005;</div>
                                                             : <div className="save" title="Guardar"
-                                                                   onClick={() => saveOrRemoveClass(shiftInfo.subject.id, shiftInfo.shift.type.name, shiftInfo.shift.number)}>&#9733;</div>
+                                                                   onClick={() => saveOrRemoveClass(shift_info.subject.id, shift_info.type.name, shift_info.number)}>&#9733;</div>
                                                 }
-                                                <h3><a href={shiftInfo.subject.url ? shiftInfo.subject.url : "javascript:;"} target={shiftInfo.subject.url ? "_blank" : ""}><span title={shiftInfo.subject.name}>{shiftInfo.subject.abbreviation}</span></a></h3>
-                                                <p><a href={shiftInfo.shift.url ? shiftInfo.shift.url : "javascript:;"} target={shiftInfo.shift.url ? "_blank" : ""}><span title={shiftInfo.shift.type.title + " " + shiftInfo.shift.number}>{shiftInfo.shift.type.name.toUpperCase()} {shiftInfo.shift.number}</span></a><br />{shiftInfo.shift.room}</p>
+                                                <h3><a href={shift_info.subject.url ? shift_info.subject.url : "javascript:;"} target={shift_info.subject.url ? "_blank" : ""}><span title={shift_info.subject.name}>{shift_info.subject.short}</span></a></h3>
+                                                <p><a href={shift_info.url ? shift_info.url : "javascript:;"} target={shift_info.url ? "_blank" : ""}><span title={shift_info.type.title + " " + shift_info.number}>{shift_info.type.name.toUpperCase()} {shift_info.number}</span></a><br />{shift_info.building ? shift_info.building + ": " + shift_info.room : ""}</p>
                                             </td>
                                         )
                                         : <ElementTD times={maxCellShifts[day] - cellFilling[hours.indexOf(hour)][day]} />
