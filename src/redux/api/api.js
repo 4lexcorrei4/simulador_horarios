@@ -17,8 +17,8 @@ export function getUpdates() {
     return axios.get(urls.updates());
 }
 
-export function getTime() {
-    return axios.get(urls.time());
+export function getSemester() {
+    return axios.get(urls.semester());
 }
 
 /*

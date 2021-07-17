@@ -28,6 +28,9 @@
     height: calc(100% - 40px);
     padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
 }
 
 #popup-content .header {
@@ -47,6 +50,7 @@
 
 #popup-content .content {
     padding: 10px 0;
+    height: 100%;
 }
 
 #popup-content #add-subject h3 {
@@ -113,4 +117,74 @@
 }
 #popup-content #add-subject .buttons .disabled:hover {
     box-shadow: none;
+}
+
+
+
+#popup-content #settings .option-block {
+    border-radius: 5px;
+    border: 1px solid var(--menu-option-border);
+    margin-bottom: 5px;
+}
+
+#popup-content #settings .option-block .option {
+    background-color: var(--menu-bg-color);
+    padding: 5px;
+}
+
+#popup-content #settings .option-block .content {
+    padding: 5px;
+}
+
+#popup-content #settings #theme .content {
+    display: flex;
+    justify-content: space-between;
+}
+
+#popup-content #settings #theme .content .switch {
+    width: 49%;
+    text-align: center;
+    border: 1px solid var(--menu-option-border);
+    border-radius: 5px;
+    padding: 5px 0;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+#popup-content #settings #theme .content .switch.selected,
+#popup-content #settings #theme .content .switch:hover {
+    background-color: var(--menu-bg-color);
+}
+
+#popup-content #settings #look .content {
+    display: flex;
+}
+
+#popup-content #settings #look .switch {
+    width: 33%;
+}
+
+#popup-content #settings #look .switch .title {
+    padding-bottom: 5px;
+}
+
+#popup-content #settings #look .switch .options {
+    border: 1px solid var(--menu-option-border);
+    border-radius: 5px;
+}
+
+#popup-content #settings #look .switch .switch-option {
+    display: block;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+#popup-content #settings #look .switch .switch-option.selected,
+#popup-content #settings #look .switch .switch-option:hover {
+    background-color: var(--menu-bg-color);
+}
+
+#popup-content #settings #about {
+    text-align: justify;
 }

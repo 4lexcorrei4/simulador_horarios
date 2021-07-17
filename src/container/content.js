@@ -6,7 +6,7 @@ const ContentContainer = ({timetableRef}) => {
     const shifts = useSelector(state => state.redux.shift.all);
     const chosenShifts = useSelector(state => state.redux.shift.chosen);
     const view = useSelector(state => state.redux.view);
-    const update_time = new Date(useSelector(state => state.redux.updateTime.time));
+    const update_time = useSelector(state => state.redux.updateTime.time);
 
     const hours = [];
     for (let current = 8; current <= 23.5; current = current + 0.5)

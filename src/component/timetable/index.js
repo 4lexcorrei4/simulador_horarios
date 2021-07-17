@@ -8,6 +8,8 @@ import ElementTD from "../elementTd";
 const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts, timetableRef, update_time}) => {
     const dispatch = useDispatch();
 
+    const update_time_date = new Date(update_time);
+
     const onMouseOver = (id, subject) => {
         $("." + id).addClass("hover");
         $("." + subject).addClass("subject-hover");
@@ -27,7 +29,7 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
 
     return <>
         <table ref={timetableRef} className="timetable">
-            <thead>
+            {/*<thead>
                 <tr>
                     <th>Hora</th>
                     <th colSpan={maxCellShifts[0]}>2ª (Seg)</th>
@@ -37,6 +39,17 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
                     <th colSpan={maxCellShifts[4]}>6ª (Sex)</th>
                     <th colSpan={maxCellShifts[5]}>Sábado</th>
                 </tr>
+            </thead>*/}
+            <thead>
+            <tr>
+                <th>Hora</th>
+                <th colSpan={maxCellShifts[0]}>Seg</th>
+                <th colSpan={maxCellShifts[1]}>Ter</th>
+                <th colSpan={maxCellShifts[2]}>Qua</th>
+                <th colSpan={maxCellShifts[3]}>Qui</th>
+                <th colSpan={maxCellShifts[4]}>Sex</th>
+                <th colSpan={maxCellShifts[5]}>Sáb</th>
+            </tr>
             </thead>
             <tbody>
             {
@@ -96,7 +109,7 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
             </tbody>
         </table>
         <span id="update-time">
-            Última atualização: {update_time ? update_time.getDate() + "/" + (update_time.getMonth() + 1) + "/" + update_time.getFullYear() + ", " + update_time.getHours() + ":" + update_time.getMinutes() : ""}
+            Última atualização: {update_time ? update_time_date.getDate() + "/" + (update_time_date.getMonth() + 1) + "/" + update_time_date.getFullYear() + ", " + update_time_date.getHours() + ":" + update_time_date.getMinutes() : ""}
         </span>
     </>
 };

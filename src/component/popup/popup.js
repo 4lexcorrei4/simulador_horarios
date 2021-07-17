@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
 import PopupAddSubject from "./addSubject";
+import Settings from "./settings";
 import {useSelector} from "react-redux";
 
 const Popup = ({option, closePopup}) => {
@@ -16,11 +17,13 @@ const Popup = ({option, closePopup}) => {
                 <div className="header">
                     <h2>
                         { option == "add-subject" ? "Adicionar Cadeira" : "" }
+                        { option == "settings" ? "Definições" : "" }
                     </h2>
                     <div id="close" onClick={() => closePopup()}>&#10005;</div>
                 </div>
                 <div className="content">
                     { option == "add-subject" ? <PopupAddSubject departments={departments} department={department} subjects={subjects} subject={subject} closePopup={closePopup} /> : <></> }
+                    { option == "settings" ? <Settings closePopup={closePopup} /> :<></> }
                 </div>
             </div>
         </div>

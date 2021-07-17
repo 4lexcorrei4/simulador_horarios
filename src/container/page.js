@@ -30,7 +30,7 @@ const PageContainer = () => {
     );
 
     return <>
-        <LeftMenuContainer />
+        <LeftMenuContainer timetableRef={timetableRef} />
         <ContentContainer timetableRef={timetableRef} />
         {
             popup ? <Popup loading={loading} option={popup} closePopup={closePopup} /> : <></>

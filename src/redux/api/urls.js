@@ -4,7 +4,7 @@ const urls = {
     departmentSubjects: (depId) => urls.departments() + "/" + depId + "/subjects",
     subject: (depId, subId) => urls.departmentSubjects(depId) + "/" + subId,
     updates: () => urls.base() + "/updates",
-    time: () => urls.base() + "/time"
+    semester: () => urls.base() + "/semester"
 
     /*lastUpdate: (year, time) => "https://api.horarios.bitsys.tech/lastupdate?year=" + year + "&time=" + time,
     departments: () => urls.base() + "/departments",

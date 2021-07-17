@@ -1,7 +1,8 @@
 import React from "react";
 import "./index.css";
+import {toPng} from "html-to-image";
 
-const LeftMenu = ({logo, name, subjects, view, theme, setPopup, removeSubject}) => {
+const LeftMenu = ({logo, name, subjects, view, theme, setPopup, removeSubject, getImage, setView, timetableRef}) => {
     const chosenSubjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
 
     return <div id="leftMenu">
@@ -35,25 +36,18 @@ const LeftMenu = ({logo, name, subjects, view, theme, setPopup, removeSubject}) 
             </div>
             <div className="option">
                 <span className="content" title="Imagem">Imagem</span>
-                <span className="symbol" title="Imagem"><ion-icon name="image"></ion-icon></span>
+                <span className="symbol" title="Imagem" onClick={() => getImage()}><ion-icon name="image"></ion-icon></span>
             </div>
             <div className="sub-title">
                 Visualização
             </div>
             <div className="option vertical">
-                <span className={"content" + (!view ? " selected" : "")} title="Escolher">Escolher</span>
-                <span className={"content" + (view == "chosen" ? " selected" : "")} title="Escolhido">Escolhido</span>
-            </div>
-            <div className="sub-title">
-                Tema
-            </div>
-            <div className="option vertical">
-                <span className={"content" + (theme == "light" ? " selected" : "")} title="Claro">Claro</span>
-                <span className={"content" + (theme == "dark" ? " selected" : "")} title="Escuro">Escuro</span>
+                <span className={"content" + (!view ? " selected" : "")} title="Escolher" onClick={() => setView(undefined)}>Escolher</span>
+                <span className={"content" + (view == "chosen" ? " selected" : "")} title="Escolhido" onClick={() => setView("chosen")}>Escolhido</span>
             </div>
             <div className="option">
-                <span className="content" title="Sobre">Sobre</span>
-                <span className="symbol" title="Sobre">&#8505;</span>
+                <span className="content" title="Definições">Definições</span>
+                <span className="symbol" title="Definições" onClick={() => setPopup("settings")}>&#9881;</span>
             </div>
         </div>
     </div>
