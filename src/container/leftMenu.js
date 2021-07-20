@@ -9,8 +9,8 @@ const LeftMenuContainer = ({timetableRef}) => {
     const dispatch = useDispatch();
 
     const subjects = useSelector(state => state.redux.subject.chosen);
+    const chosen_shifts = useSelector(state => state.redux.shift.chosen);
     const view = useSelector(state => state.redux.view);
-    const theme = useSelector(state => state.redux.theme);
 
     const setPopup = (option) => dispatch(actions.setPopup(option));
     const removeSubject = (id) => dispatch(actions.removeSubject(id));
@@ -31,12 +31,11 @@ const LeftMenuContainer = ({timetableRef}) => {
         name={conf.name}
         subjects={subjects}
         view={view}
-        theme={theme}
         setPopup={setPopup}
         removeSubject={removeSubject}
         getImage={getImage}
         setView={setView}
-        timetableRef={timetableRef}
+        chosen_shifts={chosen_shifts}
     />
 };
 

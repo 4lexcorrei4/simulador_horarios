@@ -28,7 +28,9 @@ export const types = {
     GetSemester: "[Redux] GetSemester",
     SetSemester: "[Redux] SetSemester",
     AddSubjectShifts: "[Redux] AddSubjectShifts",
-    RemoveSubjectShifts: "[Redux] RemoveSubjectShifts"
+    RemoveSubjectShifts: "[Redux] RemoveSubjectShifts",
+    SaveSubjectShift: "[Redux] SaveSubjectShift",
+    UnsaveSubjectShift: "[Redux] UnsaveSubjectShift"
 };
 
 const initialState = {
@@ -169,7 +171,7 @@ export const reducer = persistReducer(
                     ...state,
                     shift: {
                         ...state.shift,
-                        all: all_shifts
+                        all: {...all_shifts}
                     }
                 }
             }
@@ -180,7 +182,49 @@ export const reducer = persistReducer(
                     ...state,
                     shift: {
                         ...state.shift,
-                        all: all_shifts
+                        all: {...all_shifts}
+                    }
+                }
+            }
+            case types.SaveSubjectShift: {
+                const sub_id = action.payload.id;
+                const shift_type = action.payload.type;
+                const shift_number = action.payload.number;
+
+                const saved_shifts = {...state.shift.chosen};
+                if (!saved_shifts[sub_id]) {
+                    saved_shifts[sub_id] = {};
+                    saved_shifts[sub_id]["counter"] = 0;
+                }
+                if (!saved_shifts[sub_id][shift_type])
+                    saved_shifts[sub_id][shift_type] = {};
+                saved_shifts[sub_id][shift_type][shift_number] = {
+                    ...state.shift.all[sub_id][shift_type][shift_number]
+                }
+                saved_shifts[sub_id]["counter"]++;
+                return {
+                    ...state,
+                    shift: {
+                        ...state.shift,
+                        chosen: {...saved_shifts}
+                    }
+                }
+            }
+            case types.UnsaveSubjectShift: {
+                const sub_id = action.payload.id;
+                const shift_type = action.payload.type;
+                const shift_number = action.payload.number;
+
+                const saved_shifts = {...state.shift.chosen};
+                delete saved_shifts[sub_id][shift_type][shift_number];
+                saved_shifts[sub_id]["counter"]--;
+                if (saved_shifts[sub_id]["counter"] == 0)
+                    delete saved_shifts[sub_id];
+                return {
+                    ...state,
+                    shift: {
+                        ...state.shift,
+                        chosen: {...saved_shifts}
                     }
                 }
             }
@@ -208,7 +252,9 @@ export const actions = {
     getSemester: () => ({ type: types.GetSemester }),
     setSemester: (year, timeId) => ({ type: types.SetSemester, payload: { year, timeId } }),
     addSubjectShifts: (id, shifts) => ({ type: types.AddSubjectShifts, payload: {id, shifts} }),
-    removeSubjectShifts: (id) => ({ type: types.RemoveSubjectShifts, payload: id })
+    removeSubjectShifts: (id) => ({ type: types.RemoveSubjectShifts, payload: id }),
+    saveSubjectShift: (id, type, number) => ({ type: types.SaveSubjectShift, payload: { id, type, number } }),
+    unsaveSubjectShift: (id, type, number) => ({ type: types.UnsaveSubjectShift, payload: { id, type, number } })
 };
 
 export function* saga() {

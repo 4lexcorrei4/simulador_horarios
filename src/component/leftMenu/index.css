@@ -95,6 +95,10 @@
 #leftMenu .option .symbol.red {
     background-color: var(--menu-option-symbol-bg-color-red);
 }
+#leftMenu .option .symbol.blue {
+    cursor: default;
+    background-color: var(--menu-option-symbol-bg-color-blue);
+}
 
 #leftMenu .option.vertical {
     display: flex;

@@ -1,9 +1,8 @@
 import React from "react";
 import "./index.css";
-import {toPng} from "html-to-image";
 
-const LeftMenu = ({logo, name, subjects, view, theme, setPopup, removeSubject, getImage, setView, timetableRef}) => {
-    const chosenSubjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
+const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts}) => {
+    const chosen_subjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
 
     return <div id="leftMenu">
         <div className="top">
@@ -18,10 +17,14 @@ const LeftMenu = ({logo, name, subjects, view, theme, setPopup, removeSubject, g
                 <span className="symbol green" title="Adicionar" onClick={() => setPopup("add-subject")}>&#43;</span>
             </div>
             {
-                chosenSubjects.map(subject =>
+                chosen_subjects.map(subject =>
                     <div className="option">
                         <span className="content" title={"(" + subject.id + ") " + subject.name}>{subject.short}</span>
-                        <span className="symbol red" title="Remover" onClick={() => removeSubject(subject.id)}>&#x1F5D1;</span>
+                        {
+                            chosen_shifts[subject.id]
+                                ? <span className={"symbol blue"} title="Com turnos guardados">&#9733;</span>
+                                : <span className={"symbol red"} title="Remover" onClick={() => removeSubject(subject.id)}>&#x1F5D1;</span>
+                        }
                     </div>
                 )
             }
