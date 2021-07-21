@@ -1,10 +1,8 @@
 import React, {useEffect, useRef} from "react";
-import TopMenuContainer from "./topMenu";
 import ContentContainer from "./content";
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../redux/duck/redux.duck";
 import Loader from "../component/loader";
-import FooterContainer from "./footer";
 import ReactGA from "react-ga";
 import LeftMenuContainer from "./leftMenu";
 import Popup from "../component/popup/popup";
@@ -38,11 +36,6 @@ const PageContainer = () => {
         {
             loading ? <Loader /> : <></>
         }
-        {/*<TopMenuContainer timetableRef={timetableRef} />
-        <FooterContainer />*/}
-        {/*
-            loading ? <Loader /> : <></>
-        */}
     </>
 };
 

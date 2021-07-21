@@ -132,7 +132,10 @@ export const reducer = persistReducer(
             }
             case types.AddSubject: {
                 const chosen_subjects = {...state.subject.chosen};
-                chosen_subjects[action.payload.id] = action.payload;
+                chosen_subjects[action.payload.id] = {
+                    ...action.payload.subject,
+                    department: action.payload.depId
+                };
                 return {
                     ...state,
                     subject: {
@@ -246,7 +249,7 @@ export const actions = {
     setDepartments: (values) => ({ type: types.SetDepartments, payload: values }),
     setDepartment: (value) => ({ type: types.SetDepartment, payload: value }),
     setSubjects: (values) => ({ type: types.SetSubjects, payload: values }),
-    addSubject: (value) => ({ type: types.AddSubject, payload: value }),
+    addSubject: (subject, depId) => ({ type: types.AddSubject, payload: {subject, depId} }),
     removeSubject: (value) => ({ type: types.RemoveSubject, payload: value }),
     setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times }),
     getSemester: () => ({ type: types.GetSemester }),
@@ -260,7 +263,16 @@ export const actions = {
 export function* saga() {
     yield takeLatest(types.Init, function* () {
         yield put(actions.getSemester());
+
+        const my_update_time = yield select(state => state.redux.updateTime);
+        const {data: {subjects, shifts}} = api.getUpdates();
         // check if selected subjects still exist
+        if (!my_update_time.subjects || new Date(my_update_time.subjects) < new Date(subjects)) {
+            const chosen_subjects = yield select(state => state.redux.subject.chosen);
+            Object.keys(chosen_subjects).map(sub => {
+
+            });
+        }
         // check shifts updates
         yield put(actions.initEnd());
     });
@@ -271,21 +283,22 @@ export function* saga() {
         yield put(actions.setPopupEnd());
     });
     yield takeLatest(types.GetDepartments, function* () {
-        let update_times = {};
+        let update_time;
         let my_update_time;
         {
-            const {data} = yield api.getUpdates();
-            update_times = data;
+            const {data: {departments}} = yield api.getUpdates();
+            update_time = departments;
             my_update_time = yield select(state => state.redux.updateTime.department);
         }
-        if (!my_update_time || new Date(my_update_time) < new Date(update_times.departments)) {
+        if (!my_update_time || new Date(my_update_time) < new Date(update_time)) {
             const {data} = yield api.getDepartments();
             yield put(actions.setDepartments(data));
-            let time = new Date(update_times.departments) > new Date(update_times.subjects) ? update_times.departments : update_times.subjects;
-            time = new Date(time) > new Date(update_times.shifts) ? time : update_times.shifts;
+
+            const my_update_times = yield select(state => state.redux.updateTime);
             yield put(actions.setUpdateTime({
-                ...update_times,
-                time: time
+                ...my_update_times,
+                departments: update_time,
+                time: new Date(my_update_times.time) > new Date(update_time) ? my_update_times.time : update_time
             }));
         }
     });
