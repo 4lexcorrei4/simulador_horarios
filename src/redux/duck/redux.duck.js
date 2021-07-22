@@ -25,12 +25,12 @@ export const types = {
     RemoveSubject: "[Redux] RemoveSubject",
     GetUpdateTime: "[Redux] GetUpdateTime",
     SetUpdateTime: "[Redux] SetUpdateTime",
-    GetSemester: "[Redux] GetSemester",
     SetSemester: "[Redux] SetSemester",
     AddSubjectShifts: "[Redux] AddSubjectShifts",
     RemoveSubjectShifts: "[Redux] RemoveSubjectShifts",
     SaveSubjectShift: "[Redux] SaveSubjectShift",
-    UnsaveSubjectShift: "[Redux] UnsaveSubjectShift"
+    UnsaveSubjectShift: "[Redux] UnsaveSubjectShift",
+    RemoveAllSubjectShifts: "[Redux] RemoveAllSubjectShifts"
 };
 
 const initialState = {
@@ -132,7 +132,7 @@ export const reducer = persistReducer(
             }
             case types.AddSubject: {
                 const chosen_subjects = {...state.subject.chosen};
-                chosen_subjects[action.payload.id] = {
+                chosen_subjects[action.payload.subject.id] = {
                     ...action.payload.subject,
                     department: action.payload.depId
                 };
@@ -158,13 +158,13 @@ export const reducer = persistReducer(
             case types.SetUpdateTime: {
                 return {
                     ...state,
-                    updateTime: action.payload
+                    updateTime: {...action.payload}
                 }
             }
             case types.SetSemester: {
                 return {
                     ...state,
-                    semester: action.payload
+                    semester: {...action.payload}
                 }
             }
             case types.AddSubjectShifts: {
@@ -231,6 +231,19 @@ export const reducer = persistReducer(
                     }
                 }
             }
+            case types.RemoveAllSubjectShifts: {
+                const all_shifts = {...state.shift.all};
+                delete all_shifts[action.payload];
+                const chosen_shifts = {...state.shift.chosen};
+                delete chosen_shifts[action.payload];
+                return {
+                    ...state,
+                    shift: {
+                        all: {...all_shifts},
+                        chosen: {...chosen_shifts}
+                    }
+                }
+            }
             default:
                 return state;
         }
@@ -252,26 +265,34 @@ export const actions = {
     addSubject: (subject, depId) => ({ type: types.AddSubject, payload: {subject, depId} }),
     removeSubject: (value) => ({ type: types.RemoveSubject, payload: value }),
     setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times }),
-    getSemester: () => ({ type: types.GetSemester }),
     setSemester: (year, timeId) => ({ type: types.SetSemester, payload: { year, timeId } }),
     addSubjectShifts: (id, shifts) => ({ type: types.AddSubjectShifts, payload: {id, shifts} }),
     removeSubjectShifts: (id) => ({ type: types.RemoveSubjectShifts, payload: id }),
     saveSubjectShift: (id, type, number) => ({ type: types.SaveSubjectShift, payload: { id, type, number } }),
-    unsaveSubjectShift: (id, type, number) => ({ type: types.UnsaveSubjectShift, payload: { id, type, number } })
+    unsaveSubjectShift: (id, type, number) => ({ type: types.UnsaveSubjectShift, payload: { id, type, number } }),
+    removeAllSubjectShifts: (id) => ({ type: types.RemoveAllSubjectShifts, payload: id })
 };
 
 export function* saga() {
     yield takeLatest(types.Init, function* () {
-        yield put(actions.getSemester());
+        const {data: {year, timeId}} = yield api.getSemester();
+        yield put(actions.setSemester(year, timeId));
 
         const my_update_time = yield select(state => state.redux.updateTime);
-        const {data: {subjects, shifts}} = api.getUpdates();
+        const {data: {subjects, shifts}} = yield api.getUpdates();
         // check if selected subjects still exist
-        if (!my_update_time.subjects || new Date(my_update_time.subjects) < new Date(subjects)) {
+        if (!my_update_time || !my_update_time.subjects || new Date(my_update_time.subjects) < new Date(subjects)) {
             const chosen_subjects = yield select(state => state.redux.subject.chosen);
-            Object.keys(chosen_subjects).map(sub => {
-
-            });
+            const to_verify = Object.keys(chosen_subjects);
+            for (let index = 0; index < to_verify.length; index++) {
+                const sub = chosen_subjects[to_verify[index]];
+                try {
+                    yield api.getSubject(sub.department, sub.id);
+                } catch (error) {
+                    yield put(actions.removeAllSubjectShifts(sub.id));
+                    yield put(actions.removeSubject(sub.id));
+                }
+            }
         }
         // check shifts updates
         yield put(actions.initEnd());
@@ -306,9 +327,8 @@ export function* saga() {
         const {data: {subjects}} = yield api.getDepartmentSubjects(value);
         yield put(actions.setSubjects(subjects));
     });
-    yield takeLatest(types.AddSubject, function* ({payload: value}) {
-        const depId = yield select(state => state.redux.department.chosen);
-        const {data: {subject, shifts}} = yield api.getSubject(depId, value.id);
+    yield takeLatest(types.AddSubject, function* ({payload: {subject, depId}}) {
+        const {data: {subject: subject_info, shifts}} = yield api.getSubject(depId, subject.id);
         const {year, timeId} = yield select(state => state.redux.semester);
         const shifts_infos = {};
         shifts.map(shift => {
@@ -316,7 +336,7 @@ export function* saga() {
                 instance.duration /= 30;
                 instance.url = "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular/actividade/turnos" +
                     "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
-                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject.id +
+                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id +
                     "&tipo=" + conf.classesTypesCLIP(shift.type.id) + "&n%BA=" + shift.number;
             })
             shift.type = {
@@ -327,20 +347,16 @@ export function* saga() {
             if (!shifts_infos[shift.type.name])
                 shifts_infos[shift.type.name] = {}
             shift.subject = {
-                ...subject,
+                ...subject_info,
                 url: "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular" +
                     "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
-                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject.id
+                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id
             };
             shifts_infos[shift.type.name][shift.number] = shift;
         });
-        yield put(actions.addSubjectShifts(subject.id, shifts_infos));
+        yield put(actions.addSubjectShifts(subject_info.id, shifts_infos));
     });
     yield takeLatest(types.RemoveSubject, function* ({payload: value}) {
         yield put(actions.removeSubjectShifts(value));
-    });
-    yield takeLatest(types.GetSemester, function* () {
-        const {data: {year, timeId}} = yield api.getSemester();
-        yield put(actions.setSemester(year, timeId));
     });
 }
