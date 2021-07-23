@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.css";
 
-const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts}) => {
+const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts, update}) => {
     const chosen_subjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
 
     return <div id="leftMenu">
@@ -35,7 +35,7 @@ const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage
             </div>
             <div className="option">
                 <span className="content" title="Atualizar">Atualizar</span>
-                <span className="symbol" title="Atualizar">&#8634;</span>
+                <span className="symbol" title="Atualizar" onClick={() => update()}>&#8634;</span>
             </div>
             <div className="option">
                 <span className="content" title="Imagem">Imagem</span>

@@ -280,10 +280,11 @@ export function* saga() {
 
         const my_update_time = yield select(state => state.redux.updateTime);
         const {data: {subjects, shifts}} = yield api.getUpdates();
+        const max_time = new Date(subjects) > new Date(shifts) ? subjects : shifts;
         // check if selected subjects still exist
         if (!my_update_time || !my_update_time.subjects || new Date(my_update_time.subjects) < new Date(subjects)) {
             const chosen_subjects = yield select(state => state.redux.subject.chosen);
-            const to_verify = Object.keys(chosen_subjects);
+            const to_verify = Object.keys(chosen_subjects).sort((a, b) => {return a.short > b.short});
             for (let index = 0; index < to_verify.length; index++) {
                 const sub = chosen_subjects[to_verify[index]];
                 try {
@@ -295,6 +296,13 @@ export function* saga() {
             }
         }
         // check shifts updates
+
+        yield put(actions.setUpdateTime({
+            ...my_update_time,
+            subjects: subjects,
+            shifts: shifts,
+            time: !my_update_time.time || new Date(my_update_time.time) > new Date(max_time) ? my_update_time.time : max_time
+        }));
         yield put(actions.initEnd());
     });
     yield takeLatest(types.SetPopup, function* ({payload: option}) {

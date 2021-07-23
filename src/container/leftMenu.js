@@ -25,6 +25,7 @@ const LeftMenuContainer = ({timetableRef}) => {
                 image.remove();
             });
     };
+    const update = () => dispatch(actions.init());
 
     return <LeftMenu
         logo={conf.logo}
@@ -36,6 +37,7 @@ const LeftMenuContainer = ({timetableRef}) => {
         getImage={getImage}
         setView={setView}
         chosen_shifts={chosen_shifts}
+        update={update}
     />
 };
 
