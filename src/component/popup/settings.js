@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../../redux/duck/redux.duck";
-import $ from "jquery";
 
 const Settings = ({closePopup}) => {
     const dispatch = useDispatch();
@@ -42,15 +41,15 @@ const Settings = ({closePopup}) => {
             </div>
             <div className="content">
                 <h4>Objetivo</h4>
-                Permitir aos alunos da <a href="https://www.fct.unl.pt/" target="_blank">NOVA School of Science and Technology | FCT NOVA</a> uma fácil visualização dos vários turnos disponíveis e a construção de um horário otimizado e personalizado.
+                Permitir aos alunos da <a href="https://www.fct.unl.pt/" target="_blank" rel="noreferrer">NOVA School of Science and Technology | FCT NOVA</a> uma fácil visualização dos vários turnos disponíveis e a construção de um horário otimizado e personalizado.
                 <h4>Contribuir</h4>
                 Quaisquer sugestões de melhoria são sempre bem vindas!<br />
-                O código que permite pôr esta plataforma em funcionamento está disponível <a href="https://github.com/4lexcorrei4/simulador_horarios" target="_blank">aqui</a>.<br />
-                Podes contribuir e ajudar sempre que quiseres, sempre segundo a licensa <a href="https://github.com/4lexcorrei4/simulador_horarios/blob/master/LICENSE" target="_blank">GPLv3</a>.
+                O código que permite pôr esta plataforma em funcionamento está disponível <a href="https://github.com/4lexcorrei4/simulador_horarios" target="_blank" rel="noreferrer">aqui</a>.<br />
+                Podes contribuir e ajudar sempre que quiseres, sempre segundo a licensa <a href="https://github.com/4lexcorrei4/simulador_horarios/blob/master/LICENSE" target="_blank" rel="noreferrer">GPLv3</a>.
                 <h4>Contacto</h4>
-                Para me contactares basta enviares mensagem por uma das redes sociais disponíveis <a href="https://bitsys.tech/" target="_blank">aqui</a>.
+                Para me contactares basta enviares mensagem por uma das redes sociais disponíveis <a href="https://bitsys.tech/" target="_blank" rel="noreferrer">aqui</a>.
                 <h4>Desenvolvedor</h4>
-                <a href="https://bitsys.tech/" target="_blank">Alexandre Correia</a>
+                <a href="https://bitsys.tech/" target="_blank" rel="noreferrer">Alexandre Correia</a>
             </div>
         </div>
         {/*<h3>Procurar</h3>

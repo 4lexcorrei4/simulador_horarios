@@ -7,7 +7,7 @@ import {PersistGate} from "redux-persist/integration/react";
 import './App.css';
 import PageContainer from "./container/page";
 import "./component/global.css";
-import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 
 function App() {
     _redux.setupAxios(axios, store);

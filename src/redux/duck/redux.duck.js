@@ -1,6 +1,5 @@
-import {put, takeLatest, select, all} from "redux-saga/effects";
+import {put, takeLatest, select} from "redux-saga/effects";
 import {persistReducer} from "redux-persist";
-import {useHistory} from "react-router-dom";
 import storage from "redux-persist/lib/storage";
 import * as api from "../api/api";
 import conf from "../../conf";

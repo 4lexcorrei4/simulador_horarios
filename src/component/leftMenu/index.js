@@ -7,7 +7,7 @@ const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage
     return <div id="leftMenu">
         <div className="top">
             <div className="logo" title={name}>
-                <img src={logo} />
+                <img src={logo} alt="LOGO" />
             </div>
             <div className="title">
                 Cadeiras
