@@ -33,7 +33,7 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
 
     const chooseSubject = () => {
         if (subjectInfo) {
-            dispatch(actions.addSubject(subjectInfo, chosenDepartment.id));
+            dispatch(actions.addOrUpdateSubject(subjectInfo, chosenDepartment.id));
             setSubjectInfo(undefined);
         }
     };

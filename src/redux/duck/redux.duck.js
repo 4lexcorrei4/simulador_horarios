@@ -20,7 +20,7 @@ export const types = {
     SetDepartments: "[Redux] SetDepartments",
     SetDepartment: "[Redux] SetDepartment",
     SetSubjects: "[Redux] SetSubjects",
-    AddSubject: "[Redux] AddSubject",
+    AddOrUpdateSubject: "[Redux] AddOrUpdateSubject",
     RemoveSubject: "[Redux] RemoveSubject",
     GetUpdateTime: "[Redux] GetUpdateTime",
     SetUpdateTime: "[Redux] SetUpdateTime",
@@ -129,7 +129,7 @@ export const reducer = persistReducer(
                     }
                 }
             }
-            case types.AddSubject: {
+            case types.AddOrUpdateSubject: {
                 const chosen_subjects = {...state.subject.chosen};
                 chosen_subjects[action.payload.subject.id] = {
                     ...action.payload.subject,
@@ -261,7 +261,7 @@ export const actions = {
     setDepartments: (values) => ({ type: types.SetDepartments, payload: values }),
     setDepartment: (value) => ({ type: types.SetDepartment, payload: value }),
     setSubjects: (values) => ({ type: types.SetSubjects, payload: values }),
-    addSubject: (subject, depId) => ({ type: types.AddSubject, payload: {subject, depId} }),
+    addOrUpdateSubject: (subject, depId) => ({ type: types.AddOrUpdateSubject, payload: {subject, depId} }),
     removeSubject: (value) => ({ type: types.RemoveSubject, payload: value }),
     setUpdateTime: (times) => ({ type: types.SetUpdateTime, payload: times }),
     setSemester: (year, timeId) => ({ type: types.SetSemester, payload: { year, timeId } }),
@@ -280,21 +280,27 @@ export function* saga() {
         const my_update_time = yield select(state => state.redux.updateTime);
         const {data: {subjects, shifts}} = yield api.getUpdates();
         const max_time = new Date(subjects) > new Date(shifts) ? subjects : shifts;
-        // check if selected subjects still exist
-        if (!my_update_time || !my_update_time.subjects || new Date(my_update_time.subjects) < new Date(subjects)) {
+
+        if (true || !my_update_time || !my_update_time.subjects || !my_update_time.shifts || new Date(my_update_time.subjects) < new Date(subjects) || new Date(my_update_time.shifts) < new Date(shifts)) {
+            const subjects_to_update = [];
             const chosen_subjects = yield select(state => state.redux.subject.chosen);
             const to_verify = Object.keys(chosen_subjects).sort((a, b) => {return a.short > b.short});
             for (let index = 0; index < to_verify.length; index++) {
                 const sub = chosen_subjects[to_verify[index]];
                 try {
+                    // check if selected subject still exist
                     yield api.getSubject(sub.department, sub.id);
+                    subjects_to_update.push(sub);
                 } catch (error) {
-                    yield put(actions.removeAllSubjectShifts(sub.id));
-                    yield put(actions.removeSubject(sub.id));
+                    if (error.response && error.response.status == 404) {
+                        // remove if selected subject does not exist
+                        yield put(actions.removeAllSubjectShifts(sub.id));
+                        yield put(actions.removeSubject(sub.id));
+                    }
                 }
             }
+            yield put(actions.addOrUpdateSubject(subjects_to_update, undefined));
         }
-        // check shifts updates
 
         yield put(actions.setUpdateTime({
             ...my_update_time,
@@ -334,34 +340,64 @@ export function* saga() {
         const {data: {subjects}} = yield api.getDepartmentSubjects(value);
         yield put(actions.setSubjects(subjects));
     });
-    yield takeLatest(types.AddSubject, function* ({payload: {subject, depId}}) {
-        const {data: {subject: subject_info, shifts}} = yield api.getSubject(depId, subject.id);
-        const {year, timeId} = yield select(state => state.redux.semester);
-        const shifts_infos = {};
-        shifts.map(shift => {
-            shift.instances.map(instance => {
-                instance.duration /= 30;
-                instance.url = "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular/actividade/turnos" +
-                    "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
-                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id +
-                    "&tipo=" + conf.classesTypesCLIP(shift.type.id) + "&n%BA=" + shift.number;
-            })
-            shift.type = {
-                ...shift.type,
-                name: conf.classesTypes(shift.type.id),
-                title: shift.type.name
+    yield takeLatest(types.AddOrUpdateSubject, function* ({payload: {subject, depId}}) {
+        let idx = 0;
+        do {
+            const this_subject = Array.isArray(subject) ? subject[idx++] : {...subject, department: depId};
+            const {data: {subject: subject_info, shifts}} = yield api.getSubject(this_subject.department, this_subject.id);
+            const {year, timeId} = yield select(state => state.redux.semester);
+            const shifts_infos = {};
+            shifts.map(shift => {
+                shift.instances.map(instance => {
+                    instance.duration /= 30;
+                    instance.url = "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular/actividade/turnos" +
+                        "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
+                        "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id +
+                        "&tipo=" + conf.classesTypesCLIP(shift.type.id) + "&n%BA=" + shift.number;
+                })
+                shift.type = {
+                    ...shift.type,
+                    name: conf.classesTypes(shift.type.id),
+                    title: shift.type.name
+                }
+                if (!shifts_infos[shift.type.name])
+                    shifts_infos[shift.type.name] = {}
+                shift.subject = {
+                    ...subject_info,
+                    url: "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular" +
+                        "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
+                        "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id
+                };
+                shifts_infos[shift.type.name][shift.number] = shift;
+            });
+            yield put(actions.addSubjectShifts(subject_info.id, shifts_infos));
+
+            // check chosen shifts updates
+            const new_shifts = {};
+            shifts.map(shift => {
+                if (!new_shifts[subject_info.id])
+                    new_shifts[subject_info.id] = {}
+                if (!new_shifts[subject_info.id][conf.classesTypes(shift.type.id)])
+                    new_shifts[subject_info.id][conf.classesTypes(shift.type.id)] = {}
+                new_shifts[subject_info.id][conf.classesTypes(shift.type.id)][shift.number] = 1
+            });
+
+            const chosen_shifts = yield select(state => state.redux.shift.chosen);
+            const subs = Object.keys(chosen_shifts);
+            for (let sub_idx = 0; sub_idx < subs.length; sub_idx++) {
+                const sub = subs[sub_idx];
+                const shift_types = Object.keys(chosen_shifts[sub]);
+                for (let shift_type_idx = 0; shift_type_idx < shift_types.length; shift_type_idx++) {
+                    const shift_type = shift_types[shift_type_idx];
+                    const shift_numbers = Object.keys(chosen_shifts[sub][shift_type]);
+                    for (let shift_number_idx = 0; shift_number_idx < shift_numbers.length; shift_number_idx++) {
+                        const shift_number = shift_numbers[shift_number_idx];
+                        if (!new_shifts[sub] || !new_shifts[sub][shift_type] || !new_shifts[sub][shift_type][shift_number])
+                            yield put(actions.unsaveSubjectShift(sub, shift_type, shift_number));
+                    }
+                }
             }
-            if (!shifts_infos[shift.type.name])
-                shifts_infos[shift.type.name] = {}
-            shift.subject = {
-                ...subject_info,
-                url: "https://clip.fct.unl.pt/utente/eu/aluno/informa%E7%E3o_acad%E9mica/sector/ano_lectivo/unidade_curricular" +
-                    "?tipo_de_per%EDodo_lectivo=" + conf.timeType(timeId) + "&sector=98021&ano_lectivo=" + year +
-                    "&per%EDodo_lectivo=" + conf.timeNumber(timeId) + "&institui%E7%E3o=97747&unidade_curricular=" + subject_info.id
-            };
-            shifts_infos[shift.type.name][shift.number] = shift;
-        });
-        yield put(actions.addSubjectShifts(subject_info.id, shifts_infos));
+        } while (Array.isArray(subject) && idx < subject.length);
     });
     yield takeLatest(types.RemoveSubject, function* ({payload: value}) {
         yield put(actions.removeSubjectShifts(value));
