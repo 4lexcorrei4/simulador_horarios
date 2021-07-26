@@ -32,13 +32,17 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
     };
 
     const chooseSubject = () => {
-        dispatch(actions.addSubject(subjectInfo, chosenDepartment.id));
-        setSubjectInfo(undefined);
+        if (subjectInfo) {
+            dispatch(actions.addSubject(subjectInfo, chosenDepartment.id));
+            setSubjectInfo(undefined);
+        }
     };
 
     const chooseSubjectAndClose = () => {
-        chooseSubject();
-        closePopup();
+        if (subjectInfo) {
+            chooseSubject();
+            closePopup();
+        }
     };
 
     return <div id="add-subject">
