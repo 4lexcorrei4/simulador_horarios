@@ -131,10 +131,11 @@ export const reducer = persistReducer(
             }
             case types.AddOrUpdateSubject: {
                 const chosen_subjects = {...state.subject.chosen};
-                chosen_subjects[action.payload.subject.id] = {
-                    ...action.payload.subject,
-                    department: action.payload.depId
-                };
+                let subjects = action.payload.subject;
+                Array.isArray(subjects) ? subjects = subjects : [].push({...subjects, department: action.payload.depId});
+                subjects.map(sub => {
+                    chosen_subjects[sub.id] = {...sub};
+                });
                 return {
                     ...state,
                     subject: {
@@ -383,17 +384,15 @@ export function* saga() {
             });
 
             const chosen_shifts = yield select(state => state.redux.shift.chosen);
-            const subs = Object.keys(chosen_shifts);
-            for (let sub_idx = 0; sub_idx < subs.length; sub_idx++) {
-                const sub = subs[sub_idx];
-                const shift_types = Object.keys(chosen_shifts[sub]);
+            if (chosen_shifts[subject_info.id]) {
+                const shift_types = Object.keys(chosen_shifts[subject_info.id]);
                 for (let shift_type_idx = 0; shift_type_idx < shift_types.length; shift_type_idx++) {
                     const shift_type = shift_types[shift_type_idx];
-                    const shift_numbers = Object.keys(chosen_shifts[sub][shift_type]);
+                    const shift_numbers = Object.keys(chosen_shifts[subject_info.id][shift_type]);
                     for (let shift_number_idx = 0; shift_number_idx < shift_numbers.length; shift_number_idx++) {
                         const shift_number = shift_numbers[shift_number_idx];
-                        if (!new_shifts[sub] || !new_shifts[sub][shift_type] || !new_shifts[sub][shift_type][shift_number])
-                            yield put(actions.unsaveSubjectShift(sub, shift_type, shift_number));
+                        if (!new_shifts[subject_info.id] || !new_shifts[subject_info.id][shift_type] || !new_shifts[subject_info.id][shift_type][shift_number])
+                            yield put(actions.unsaveSubjectShift(subject_info.id, shift_type, shift_number));
                     }
                 }
             }
