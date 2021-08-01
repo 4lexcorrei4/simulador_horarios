@@ -282,7 +282,7 @@ export function* saga() {
         const {data: {subjects, shifts}} = yield api.getUpdates();
         const max_time = new Date(subjects) > new Date(shifts) ? subjects : shifts;
 
-        if (true || !my_update_time || !my_update_time.subjects || !my_update_time.shifts || new Date(my_update_time.subjects) < new Date(subjects) || new Date(my_update_time.shifts) < new Date(shifts)) {
+        if (!my_update_time || !my_update_time.subjects || !my_update_time.shifts || new Date(my_update_time.subjects) < new Date(subjects) || new Date(my_update_time.shifts) < new Date(shifts)) {
             const subjects_to_update = [];
             const chosen_subjects = yield select(state => state.redux.subject.chosen);
             const to_verify = Object.keys(chosen_subjects).sort((a, b) => {return a.short > b.short});
