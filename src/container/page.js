@@ -6,6 +6,7 @@ import Loader from "../component/loader";
 import ReactGA from "react-ga";
 import LeftMenuContainer from "./leftMenu";
 import Popup from "../component/popup/popup";
+import $ from "jquery";
 
 const PageContainer = () => {
     //ReactGA.initialize("UA-190799873-1");
@@ -16,6 +17,7 @@ const PageContainer = () => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state.redux.loading);
     const popup = useSelector(state => state.redux.popup);
+    const theme = useSelector(state => state.redux.theme);
     let timetableRef = useRef(null);
 
     const closePopup = () => dispatch(actions.clearPopup());
@@ -26,6 +28,8 @@ const PageContainer = () => {
         },
         []
     );
+
+    $("body").attr("class", theme);
 
     return <>
         <LeftMenuContainer timetableRef={timetableRef} />

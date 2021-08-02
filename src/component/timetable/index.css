@@ -16,18 +16,18 @@
 }
 
 .timetable thead {
-    background-color: rgba(220, 220, 220, 1);
-    border-bottom: 1px solid gray;
+    background-color: var(--timetable-thead);
+    border-bottom: 1px solid var(--timetable-thead-border-color);
 }
 
 .timetable tbody tr:nth-child(4n+1),
 .timetable tbody tr:nth-child(4n+2) {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--timetable-even-hour-bg-color);
 }
 
 .timetable tbody tr:nth-child(4n+3),
 .timetable tbody tr:nth-child(4n+4) {
-    background-color: rgba(245, 245, 245, 1);
+    background-color: var(--timetable-odd-hour-bg-color);
 }
 
 .timetable tbody tr td:first-child {
@@ -35,7 +35,7 @@
 }
 
 .timetable th {
-    border-right: 1px solid gray;
+    border-right: 1px solid var(--timetable-thead-border-color);
 }
 
 .timetable th:last-child {
@@ -59,13 +59,14 @@
 }
 
 .timetable tbody tr td:first-child {
-    border-right: 1px solid rgba(200, 200, 200, 1);
+    border-right: 1px solid var(--timetable-tbody-border-color);
 }
 
 .timetable .class {
     text-align: center;
-    border: 1px solid rgba(200, 200, 200, 1);
+    border: 1px solid var(--timetable-class-border-color);
     transition: background-color 0.5s, color 0.5s;
+    color: var(--font-color);
 }
 
 .timetable .class h3 {
@@ -80,37 +81,37 @@
     transition: all 0.5s;
 }
 .timetable .class.hover a {
-    color: #fff;
+    color: var(--font-color-hover);
 }
 
 .timetable .class.t {
-    background-color: rgba(210, 210, 210, 1);
+    background-color: var(--timetable-class-t-bg-color);
 }
 .timetable .class.to {
-    background-color: rgba(215, 215, 215, 1);
+    background-color: var(--timetable-class-to-bg-color);
 }
 
 .timetable .class.tp {
-    background-color: rgba(220, 220, 220, 1);
+    background-color: var(--timetable-class-tp-bg-color);
 }
 .timetable .class.tpo {
-    background-color: rgba(225, 225, 225, 1);
+    background-color: var(--timetable-class-tpo-bg-color);
 }
 
 .timetable .class.p {
-    background-color: rgba(230, 230, 230, 1);
+    background-color: var(--timetable-class-p-bg-color);
 }
 .timetable .class.po {
-    background-color: rgba(235, 235, 235, 1);
+    background-color: var(--timetable-class-po-bg-color);
 }
 
 .timetable .class.subject-hover {
-    background-color: rgba(170, 170, 170, 1);
+    background-color: var(--timetable-subject-hover);
 }
 
 .timetable .class.hover {
-    background-color: rgba(130, 130, 130, 1);
-    color: #fff;
+    background-color: var(--timetable-class-hover);
+    color: var(--font-color-hover);
 }
 
 .timetable .class .save {
@@ -120,4 +121,8 @@
     font-size: 15px;
     cursor: pointer;
     font-weight: bold;
+}
+
+.timetable .with-right-border {
+    border-right: 1px solid var(--timetable-tbody-border-color);
 }

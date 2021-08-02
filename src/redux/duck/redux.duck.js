@@ -1,8 +1,9 @@
-import {put, takeLatest, select} from "redux-saga/effects";
+import {put, takeLatest, select, all} from "redux-saga/effects";
 import {persistReducer} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import * as api from "../api/api";
 import conf from "../../conf";
+import $ from "jquery";
 //import Swal from "sweetalert2";
 //import withReactContent from "sweetalert2-react-content";
 
@@ -309,6 +310,7 @@ export function* saga() {
             shifts: shifts,
             time: !my_update_time.time || new Date(my_update_time.time) > new Date(max_time) ? my_update_time.time : max_time
         }));
+
         yield put(actions.initEnd());
     });
     yield takeLatest(types.SetPopup, function* ({payload: option}) {
