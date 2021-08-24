@@ -133,7 +133,8 @@ export const reducer = persistReducer(
             case types.AddOrUpdateSubject: {
                 const chosen_subjects = {...state.subject.chosen};
                 let subjects = action.payload.subject;
-                Array.isArray(subjects) ? subjects = subjects : [].push({...subjects, department: action.payload.depId});
+                if (!Array.isArray(subjects))
+                    subjects = [{...subjects, department: action.payload.depId}];
                 subjects.map(sub => {
                     chosen_subjects[sub.id] = {...sub};
                 });
@@ -308,7 +309,7 @@ export function* saga() {
             ...my_update_time,
             subjects: subjects,
             shifts: shifts,
-            time: !my_update_time.time || new Date(my_update_time.time) > new Date(max_time) ? my_update_time.time : max_time
+            time: !my_update_time.time || new Date(my_update_time.time) < new Date(max_time) ? max_time : my_update_time.time
         }));
 
         yield put(actions.initEnd());
@@ -398,7 +399,7 @@ export function* saga() {
                     }
                 }
             }
-        } while (Array.isArray(subject) && idx < subject.length);
+        } while(Array.isArray(subject) && idx < subject.length);
     });
     yield takeLatest(types.RemoveSubject, function* ({payload: value}) {
         yield put(actions.removeSubjectShifts(value));
