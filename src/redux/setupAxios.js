@@ -1,26 +1,22 @@
-/*import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import msgs from '../utils/msgs';*/
 
 export default function setupAxios(axios, store) {
-    /*const swal = withReactContent(Swal);
+    const swal = withReactContent(Swal);
 
     axios.interceptors.response.use(
         response => response,
         error => {
-            if (false && error.response.status == 200) {
-                swal.fire({
-                    title: error.response.data,
-                    showConfirmButton: true,
-                    showCancelButton: false,
-                    icon: "warning"
-                })
-                    .then(result => {
-                        if (result.isConfirmed)
-                            window.location.replace("/login");
-                    });
-            } else
-                return error;
+            swal.fire({
+                title: "Ocorreu um erro, tente de novo",
+                showConfirmButton: true,
+                showCancelButton: false,
+                icon: "warning"
+            })
+                .then(result => {
+                    if (result.isConfirmed)
+                        window.location.replace("/");
+                });
         }
-    );*/
+    );
 }
