@@ -1,12 +1,24 @@
 #leftMenu {
     width: 150px;
     height: 100vh;
-    display: flex;
     flex-flow: column;
     justify-content: space-between;
     align-items: center;
     border-right: 1px solid var(--menu-border);
     background-color: var(--menu-bg-color);
+    z-index: 100;
+}
+#leftMenu.open {
+    display: flex;
+}
+#leftMenu.closed {
+    display: none;
+}
+@media (max-width: 700px) {
+    #leftMenu {
+        width: 100%;
+        position: fixed;
+    }
 }
 
 #leftMenu .top,
@@ -39,6 +51,11 @@
     text-transform: uppercase;
     font-weight: bold;
 }
+@media (max-width: 700px) {
+    #leftMenu .title {
+        padding: 20px 20px 0 20px;
+    }
+}
 
 #leftMenu .sub-title {
     text-align: center;
@@ -51,11 +68,16 @@
     border-radius: 5px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     transition: box-shadow 0.5s;
 }
 #leftMenu .option:hover {
     box-shadow: 0 0 2px 2px gray;
+}
+@media (max-width: 700px) {
+    #leftMenu .option {
+        margin: 10px 30px;
+    }
 }
 
 #leftMenu .option .content {
@@ -75,13 +97,18 @@
 #leftMenu .option .content:last-child {
     border-radius: 0 5px 5px 0;
 }
+@media (max-width: 700px) {
+    #leftMenu .option .content {
+        padding: 10px;
+    }
+}
 
 #leftMenu .option .symbol {
     background-color: var(--menu-option-symbol-bg-color);
     border-radius: 0 5px 5px 0;
-    padding: 2px 0;
+    /*padding: 2px 0;*/
     width: 25%;
-    height: 20px;
+    /*height: 20px;*/
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -123,6 +150,11 @@
 }
 #leftMenu .option.vertical .content:last-child {
     border-radius: 0 0 5px 5px;
+}
+@media (max-width: 700px) {
+    #leftMenu .option.vertical .content {
+        width: calc(100% - 20px);
+    }
 }
 
 #leftMenu .option.vertical .content:hover,

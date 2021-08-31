@@ -31,7 +31,20 @@ const PageContainer = () => {
 
     $("body").attr("class", theme);
 
+    const openCloseMenu = () => {
+        if ($("#menuButton").html().charCodeAt(0) == 10005) {
+            $("#menuButton").html("&#9776;");
+            $("#leftMenu").removeClass("open");
+            $("#leftMenu").addClass("closed");
+        } else {
+            $("#menuButton").html("&#10005;");
+            $("#leftMenu").addClass("open");
+            $("#leftMenu").removeClass("closed");
+        }
+    }
+
     return <>
+        <span id="menuButton" className="menuButtons" onClick={() => openCloseMenu()}>&#10005;</span>
         <LeftMenuContainer timetableRef={timetableRef} />
         <ContentContainer timetableRef={timetableRef} />
         {
