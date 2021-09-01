@@ -1,5 +1,5 @@
 const urls = {
-    base: () => "http://localhost:5000",
+    base: () => "http://localhost:7000",
     departments: () => urls.base() + "/departments",
     departmentSubjects: (depId) => urls.departments() + "/" + depId + "/subjects",
     subject: (depId, subId) => urls.departmentSubjects(depId) + "/" + subId,
