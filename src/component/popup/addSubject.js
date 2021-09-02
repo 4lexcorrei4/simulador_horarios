@@ -53,13 +53,15 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
                 <div>
                     <span>{chosenDepartment ? "(" + chosenDepartment.short + ") " + chosenDepartment.name : ""}</span>
                     <input list="departments" id="department-choose" onChange={() => chooseDepartment()} placeholder="Pesquisar" />
-                    <datalist id="departments">
-                        {
-                            departments.map(dep =>
-                                dep.id != department ? <option value={dep.id} label={"(" + dep.short + ") " + dep.name} /> : <></>
-                            )
-                        }
-                    </datalist>
+                    <label for="departments">
+                        <datalist id="departments">
+                            {
+                                departments.map(dep =>
+                                    dep.id != department ? <option value={dep.id} label={"(" + dep.short + ") " + dep.name} /> : <></>
+                                )
+                            }
+                        </datalist>
+                    </label>
                 </div>
             </div>
             <div className="option-block">

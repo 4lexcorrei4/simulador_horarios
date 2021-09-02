@@ -82,14 +82,18 @@
 }
 
 #leftMenu .option .content {
+    display: flex;
+    align-items: center;
     background-color: var(--menu-option-content-bg-color);
-    padding: 3px 5px;
+    /*padding: 3px 5px;*/
+    padding: 0 5px;
     width: calc(75% - 10px);
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 14px;
     white-space: nowrap;
     border-left: 1px solid var(--menu-option-border);
+    height: 25px;
 }
 #leftMenu .option .content:first-child {
     border-radius: 5px 0 0 5px;
@@ -116,6 +120,7 @@
     justify-content: center;
     color: var(--menu-option-symbol-color);
     cursor: pointer;
+    height: 25px;
 }
 #leftMenu .option .symbol.green {
     background-color: var(--menu-option-symbol-bg-color-green);
