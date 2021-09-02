@@ -302,7 +302,8 @@ export function* saga() {
                     }
                 }
             }
-            yield put(actions.addOrUpdateSubject(subjects_to_update, undefined));
+            if (subjects_to_update.length > 0)
+                yield put(actions.addOrUpdateSubject(subjects_to_update, undefined));
         }
 
         yield put(actions.setUpdateTime({
