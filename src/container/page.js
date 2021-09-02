@@ -9,8 +9,8 @@ import Popup from "../component/popup/popup";
 import $ from "jquery";
 
 const PageContainer = () => {
-    //ReactGA.initialize("UA-190799873-1");
-    //ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.initialize("UA-190799873-1");
+    ReactGA.pageview(window.location.pathname + window.location.search);
     /*ReactGA.initialize("G-6NWXFDQXSZ");
     ReactGA.pageview(window.location.pathname + window.location.search);*/
 
