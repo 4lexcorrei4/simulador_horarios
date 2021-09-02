@@ -74,7 +74,7 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
                     <datalist id="departments">
                         {
                             departments.map(dep =>
-                                dep.id != department ? <option value={dep.id} label={"(" + dep.short + ") " + dep.name} /> : <></>
+                                dep.id != department ? <option value={dep.id}>{"(" + dep.short + ") " + dep.name}</option> : <></>
                             )
                         }
                     </datalist>
@@ -82,8 +82,7 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
                         <option value="-1" disabled selected>Pesquisar</option>
                         {
                             departments.map(dep =>
-                                dep.id != department ?
-                                    <option value={dep.id} label={"(" + dep.short + ") " + dep.name}/> : <></>
+                                dep.id != department ? <option value={dep.id}>{"(" + dep.short + ") " + dep.name}</option> : <></>
                             )
                         }
                     </select>
