@@ -39,13 +39,31 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
         }
     };
 
-    const addSubject = () => {
-        const id = $("#subject-choose").val();
-        let sub = undefined;
-        subjects.map(this_sub => {if (this_sub.id == id) {sub = this_sub}});
-        if (!Number.isNaN(id) && sub) {
-            setSubjectInfo(sub);
-            $("#subject-choose").val("");
+    const addSubject = option_or_value => {
+        if (option_or_value == "datalist") {
+            const id = $("#subject-choose").val();
+            let sub = undefined;
+            subjects.map(this_sub => {
+                if (this_sub.id == id) {
+                    sub = this_sub
+                }
+            });
+            if (!Number.isNaN(id) && sub) {
+                setSubjectInfo(sub);
+                $("#subject-choose").val("");
+            }
+        } else {
+            const id = option_or_value;
+            let sub = undefined;
+            subjects.map(this_sub => {
+                if (this_sub.id == id) {
+                    sub = this_sub
+                }
+            });
+            if (!Number.isNaN(id) && sub) {
+                setSubjectInfo(sub);
+                $("#subject-choose-select").val(-1);
+            }
         }
     };
 
@@ -91,14 +109,22 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
             <div className="option-block">
                 <h4>Cadeira</h4>
                 <div>
-                    <input list="subjects" id="subject-choose" onChange={() => addSubject()} placeholder="Pesquisar" />
+                    <input list="subjects" id="subject-choose" onChange={() => addSubject("datalist")} placeholder="Pesquisar" />
                     <datalist id="subjects">
                         {
                             subjects.map(sub =>
-                                (!subjectInfo || subjectInfo.id != sub.id) && (!Object.keys(subject).includes(String(sub.id))) ? <option value={sub.id} label={"(" + sub.short + ") " + sub.name} /> : <></>
+                                (!subjectInfo || subjectInfo.id != sub.id) && (!Object.keys(subject).includes(String(sub.id))) ? <option value={sub.id}>{"(" + sub.short + ") " + sub.name}</option> : <></>
                             )
                         }
                     </datalist>
+                    <select id="subject-choose-select" onChange={(event) => addSubject(event.target.value)}>
+                        <option value="-1" disabled selected>Pesquisar</option>
+                        {
+                            subjects.map(sub =>
+                                (!subjectInfo || subjectInfo.id != sub.id) && (!Object.keys(subject).includes(String(sub.id))) ? <option value={sub.id}>{"(" + sub.short + ") " + sub.name}</option> : <></>
+                            )
+                        }
+                    </select>
                 </div>
             </div>
         </div>
