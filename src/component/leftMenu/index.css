@@ -104,7 +104,8 @@
 }
 @media (max-width: 700px) {
     #leftMenu .option .content {
-        padding: 10px;
+        padding: 0 10px;
+        height: 40px;
     }
 }
 
@@ -131,6 +132,11 @@
 #leftMenu .option .symbol.blue {
     cursor: default;
     background-color: var(--menu-option-symbol-bg-color-blue);
+}
+@media (max-width: 700px) {
+    #leftMenu .option .symbol {
+        height: 40px;
+    }
 }
 
 #leftMenu .option.vertical {
