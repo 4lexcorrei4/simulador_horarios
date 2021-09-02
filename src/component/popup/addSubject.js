@@ -11,13 +11,31 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
     let chosenDepartment = undefined;
     departments.map(dep => {if (dep.id == department) {chosenDepartment = dep}});
 
-    const chooseDepartment = () => {
-        const id = $("#department-choose").val();
-        let dep = undefined;
-        departments.map(this_dep => {if (this_dep.id == id) {dep = this_dep}});
-        if (!Number.isNaN(id) && dep) {
-            dispatch(actions.setDepartment(id));
-            $("#department-choose").val("");
+    const chooseDepartment = option_or_value => {
+        if (option_or_value == "datalist") {
+            const id = $("#department-choose").val();
+            let dep = undefined;
+            departments.map(this_dep => {
+                if (this_dep.id == id) {
+                    dep = this_dep
+                }
+            });
+            if (!Number.isNaN(id) && dep) {
+                dispatch(actions.setDepartment(id));
+                $("#department-choose").val("");
+            }
+        } else {
+            const id = option_or_value;
+            let dep = undefined;
+            departments.map(this_dep => {
+                if (this_dep.id == id) {
+                    dep = this_dep
+                }
+            });
+            if (!Number.isNaN(id) && dep) {
+                dispatch(actions.setDepartment(id));
+                $("#department-choose-select").val(-1);
+            }
         }
     };
 
@@ -52,18 +70,23 @@ const PopupAddSubject = ({departments, department, subjects, subject, closePopup
                 <h4>Departamento</h4>
                 <div>
                     <span>{chosenDepartment ? "(" + chosenDepartment.short + ") " + chosenDepartment.name : ""}</span>
-                    <input list="departments" id="department-choose" onChange={() => chooseDepartment()} placeholder="Pesquisar" />
-                    <label for="departments">
-                        <datalist id="departments">
-                            <select>
-                                {
-                                    departments.map(dep =>
-                                        dep.id != department ? <option value={dep.id} label={"(" + dep.short + ") " + dep.name} /> : <></>
-                                    )
-                                }
-                            </select>
-                        </datalist>
-                    </label>
+                    <input className="desktop" list="departments" id="department-choose" onChange={() => chooseDepartment("datalist")} placeholder="Pesquisar" />
+                    <datalist id="departments">
+                        {
+                            departments.map(dep =>
+                                dep.id != department ? <option value={dep.id} label={"(" + dep.short + ") " + dep.name} /> : <></>
+                            )
+                        }
+                    </datalist>
+                    <select className="mobile" id="department-choose-select" onChange={(event) => chooseDepartment(event.target.value)}>
+                        <option value="-1" disabled selected>Pesquisar</option>
+                        {
+                            departments.map(dep =>
+                                dep.id != department ?
+                                    <option value={dep.id} label={"(" + dep.short + ") " + dep.name}/> : <></>
+                            )
+                        }
+                    </select>
                 </div>
             </div>
             <div className="option-block">

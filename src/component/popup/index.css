@@ -105,6 +105,9 @@
 #popup-content #add-subject .block .option-block span {
     margin-right: 5px;
 }
+#popup-content #add-subject .block .option-block select {
+    width: 192px;
+}
 
 #popup-content #add-subject .buttons {
     display: flex;
