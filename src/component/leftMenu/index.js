@@ -5,7 +5,7 @@ import $ from "jquery";
 const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts, update}) => {
     const chosen_subjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
 
-    return <div id="leftMenu" className="open">
+    return <div id="leftMenu" className="closed">
         <div className="top">
             <div className="logo" title={name}>
                 <img src={logo} alt="LOGO" />

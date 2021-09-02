@@ -121,9 +121,17 @@ a:active {
     font-size: 40px;
     display: none;
     z-index: 700;
+    background-color: var(--menu-bg-color);
+    border-radius: 20px;
+    height: 50px;
+    width: 50px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.7;
 }
 @media (max-width: 700px) {
     #menuButton {
-        display: block;
+        display: flex;
     }
 }

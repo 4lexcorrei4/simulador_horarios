@@ -44,7 +44,7 @@ const PageContainer = () => {
     }
 
     return <>
-        <span id="menuButton" className="menuButtons" onClick={() => openCloseMenu()}>&#10005;</span>
+        <span id="menuButton" className="menuButtons" onClick={() => openCloseMenu()}>&#9776;</span>
         <LeftMenuContainer timetableRef={timetableRef} />
         <ContentContainer timetableRef={timetableRef} />
         {
