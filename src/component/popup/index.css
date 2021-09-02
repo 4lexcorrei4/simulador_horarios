@@ -209,3 +209,15 @@
 #popup-content #settings #about {
     text-align: justify;
 }
+
+@media (min-width: 1025px) {
+    #popup-content #add-subject #department-choose-select {
+        display: none;
+    }
+}
+
+@media (max-width: 1025px) {
+    #popup-content #add-subject #department-choose {
+        display: none;
+    }
+}
