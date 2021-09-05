@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import $ from "jquery";
 
-const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts, update}) => {
+const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage, setView, chosen_shifts, update, onSubjectHover, onSubjectLeave}) => {
     const chosen_subjects = Object.values(subjects).sort((a, b) => {return a.short > b.short});
 
     return <div id="leftMenu" className="closed">
@@ -19,7 +19,7 @@ const LeftMenu = ({logo, name, subjects, view, setPopup, removeSubject, getImage
             </div>
             {
                 chosen_subjects.map(subject =>
-                    <div className="option">
+                    <div className="option" onMouseOver={() => onSubjectHover(subject.id)} onMouseLeave={() => onSubjectLeave(subject.id)}>
                         <span className="content" title={"(" + subject.id + ") " + subject.name}>{subject.short}</span>
                         {
                             chosen_shifts[subject.id]

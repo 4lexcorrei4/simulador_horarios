@@ -4,6 +4,7 @@ import conf from "../conf";
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../redux/duck/redux.duck";
 import {toPng} from "html-to-image";
+import $ from "jquery";
 
 const LeftMenuContainer = ({timetableRef}) => {
     const dispatch = useDispatch();
@@ -27,6 +28,9 @@ const LeftMenuContainer = ({timetableRef}) => {
     };
     const update = () => dispatch(actions.init());
 
+    const onSubjectHover = (subject) => $("." + subject).addClass("subject-hover");
+    const onSubjectLeave = (subject) => $("." + subject).removeClass("subject-hover");
+
     return <LeftMenu
         logo={conf.logo}
         name={conf.name}
@@ -38,6 +42,8 @@ const LeftMenuContainer = ({timetableRef}) => {
         setView={setView}
         chosen_shifts={chosen_shifts}
         update={update}
+        onSubjectHover={onSubjectHover}
+        onSubjectLeave={onSubjectLeave}
     />
 };
 
