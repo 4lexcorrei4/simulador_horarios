@@ -102,7 +102,7 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
             </div>
         </div>
         <span id="update-time">
-            Última atualização: {update_time ? update_time_date.getDate() + "/" + (update_time_date.getMonth() + 1) + "/" + update_time_date.getFullYear() + ", " + update_time_date.getHours() + ":" + update_time_date.getMinutes() : ""}
+            Última atualização: {update_time ? update_time_date.getDate() + "/" + (update_time_date.getMonth() + 1) + "/" + update_time_date.getFullYear() : ""}
         </span>
     </>
 };
