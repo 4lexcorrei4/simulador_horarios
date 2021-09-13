@@ -295,7 +295,7 @@ export function* saga() {
                     yield api.getSubject(sub.department, sub.id);
                     subjects_to_update.push(sub);
                 } catch (error) {
-                    if (error.response && error.response.status == 404) {
+                    if (error.response && error.response.status != 200) {
                         // remove if selected subject does not exist
                         yield put(actions.removeAllSubjectShifts(sub.id));
                         yield put(actions.removeSubject(sub.id));
