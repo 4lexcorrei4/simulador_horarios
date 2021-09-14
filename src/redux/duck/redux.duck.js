@@ -304,6 +304,12 @@ export function* saga() {
             }
             if (subjects_to_update.length > 0)
                 yield put(actions.addOrUpdateSubject(subjects_to_update, undefined));
+            // check chosen department
+            const department = yield select(state => state.redux.department.chosen);
+            if (department) {
+                const {data: {subjects}} = yield api.getDepartmentSubjects(department);
+                yield put(actions.setSubjects(subjects));
+            }
         }
 
         yield put(actions.setUpdateTime({

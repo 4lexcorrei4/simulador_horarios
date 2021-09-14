@@ -7,16 +7,19 @@ export default function setupAxios(axios, store) {
     axios.interceptors.response.use(
         response => response,
         error => {
-            swal.fire({
-                title: "Ocorreu um erro, tente de novo",
-                showConfirmButton: true,
-                showCancelButton: false,
-                icon: "warning"
-            })
-                .then(result => {
-                    if (result.isConfirmed)
-                        window.location.replace("/");
-                });
+            if (error.response.status !== 404)
+                swal.fire({
+                    title: "Ocorreu um erro, tente de novo",
+                    showConfirmButton: true,
+                    showCancelButton: false,
+                    icon: "warning"
+                })
+                    .then(result => {
+                        if (result.isConfirmed)
+                            window.location.replace("/");
+                    });
+            else
+                return Promise.reject(error);
         }
     );
 }
