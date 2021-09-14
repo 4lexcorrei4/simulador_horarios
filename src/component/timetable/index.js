@@ -81,7 +81,7 @@ const Timetable = ({maxCellShifts, hours, cellShifts, cellFilling, chosenShifts,
                                                                            onClick={() => saveOrUnsaveShift(shift_info.subject.id, shift_info.type.name, shift_info.number)}>&#9733;</div>
                                                         }
                                                         <h3><a href={shift_info.subject.url ? shift_info.subject.url : "javascript:;"} target={shift_info.subject.url ? "_blank" : ""} rel="noreferrer"><span title={shift_info.subject.name}>{shift_info.subject.short}</span></a></h3>
-                                                        <p><a href={shift_info.url ? shift_info.url : "javascript:;"} target={shift_info.url ? "_blank" : ""} rel="noreferrer"><span title={shift_info.type.title + " " + shift_info.number}>{shift_info.type.name.toUpperCase()} {shift_info.number}</span></a><br />{shift_info.building ? shift_info.building + ": " + shift_info.room : ""}</p>
+                                                        <p><a href={shift_info.url ? shift_info.url : "javascript:;"} target={shift_info.url ? "_blank" : ""} rel="noreferrer"><span title={shift_info.type.title + " " + shift_info.number}>{shift_info.type.name.toUpperCase()} {shift_info.number}</span></a><br />{shift_info.building ? shift_info.building + ": " + shift_info.room : "Online"}</p>
                                                     </td>
                                                 )
                                                 : <ElementTD times={maxCellShifts[day] - cellFilling[hours.indexOf(hour)][day]} />
