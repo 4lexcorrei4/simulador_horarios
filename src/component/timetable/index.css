@@ -116,6 +116,9 @@
 .timetable .class.to {
     background-color: var(--timetable-class-to-bg-color);
 }
+.timetable .class.ot {
+    background-color: var(--timetable-class-ot-bg-color);
+}
 
 .timetable .class.tp {
     background-color: var(--timetable-class-tp-bg-color);
