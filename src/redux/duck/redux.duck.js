@@ -29,6 +29,7 @@ export const types = {
     AddSubjectShifts: "[Redux] AddSubjectShifts",
     RemoveSubjectShifts: "[Redux] RemoveSubjectShifts",
     SaveSubjectShift: "[Redux] SaveSubjectShift",
+    UpdateSavedSubjectShifts: "[Redux] UpdateSavedSubjectShifts",
     UnsaveSubjectShift: "[Redux] UnsaveSubjectShift",
     RemoveAllSubjectShifts: "[Redux] RemoveAllSubjectShifts"
 };
@@ -215,6 +216,25 @@ export const reducer = persistReducer(
                     }
                 }
             }
+            case types.UpdateSavedSubjectShifts: {
+                const sub_id = action.payload;
+
+                const saved_shifts = {...state.shift.chosen};
+                if (saved_shifts[sub_id]) {
+                    Object.keys(saved_shifts[sub_id]).map(shift_type => {
+                        Object.keys(saved_shifts[sub_id][shift_type]).map(shift_number => {
+                            saved_shifts[sub_id][shift_type][shift_number] = state.shift.all[sub_id][shift_type][shift_number]
+                        })
+                    })
+                }
+                return {
+                    ...state,
+                    shift: {
+                        ...state.shift,
+                        chosen: {...saved_shifts}
+                    }
+                }
+            }
             case types.UnsaveSubjectShift: {
                 const sub_id = action.payload.id;
                 const shift_type = action.payload.type;
@@ -271,6 +291,7 @@ export const actions = {
     addSubjectShifts: (id, shifts) => ({ type: types.AddSubjectShifts, payload: {id, shifts} }),
     removeSubjectShifts: (id) => ({ type: types.RemoveSubjectShifts, payload: id }),
     saveSubjectShift: (id, type, number) => ({ type: types.SaveSubjectShift, payload: { id, type, number } }),
+    updateSavedSubjectShift: (id) => ({ type: types.UpdateSavedSubjectShifts, payload: id }),
     unsaveSubjectShift: (id, type, number) => ({ type: types.UnsaveSubjectShift, payload: { id, type, number } }),
     removeAllSubjectShifts: (id) => ({ type: types.RemoveAllSubjectShifts, payload: id })
 };
@@ -284,7 +305,7 @@ export function* saga() {
         const {data: {subjects, shifts}} = yield api.getUpdates();
         const max_time = new Date(subjects) > new Date(shifts) ? subjects : shifts;
 
-        if (!my_update_time || !my_update_time.subjects || !my_update_time.shifts || new Date(my_update_time.subjects) < new Date(subjects) || new Date(my_update_time.shifts) < new Date(shifts)) {
+        if (true || !my_update_time || !my_update_time.subjects || !my_update_time.shifts || new Date(my_update_time.subjects) < new Date(subjects) || new Date(my_update_time.shifts) < new Date(shifts)) {
             const subjects_to_update = [];
             const chosen_subjects = yield select(state => state.redux.subject.chosen);
             const to_verify = Object.keys(chosen_subjects).sort((a, b) => {return a.short > b.short});
@@ -382,8 +403,9 @@ export function* saga() {
                 shifts_infos[shift.type.name][shift.number] = shift;
             });
             yield put(actions.addSubjectShifts(subject_info.id, shifts_infos));
+            yield put(actions.updateSavedSubjectShift(subject_info.id));
 
-            // check chosen shifts updates
+            // check deleted chosen shifts
             const new_shifts = {};
             shifts.map(shift => {
                 if (!new_shifts[subject_info.id])
