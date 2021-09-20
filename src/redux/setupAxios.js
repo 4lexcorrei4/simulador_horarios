@@ -7,7 +7,7 @@ export default function setupAxios(axios, store) {
     axios.interceptors.response.use(
         response => response,
         error => {
-            if (error.response.status !== 404)
+            if (!error.response || error.response.status !== 404)
                 swal.fire({
                     title: "Ocorreu um erro, tente de novo",
                     showConfirmButton: true,

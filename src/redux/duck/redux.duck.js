@@ -403,7 +403,6 @@ export function* saga() {
                 shifts_infos[shift.type.name][shift.number] = shift;
             });
             yield put(actions.addSubjectShifts(subject_info.id, shifts_infos));
-            yield put(actions.updateSavedSubjectShift(subject_info.id));
 
             // check deleted chosen shifts
             const new_shifts = {};
@@ -427,6 +426,7 @@ export function* saga() {
                             yield put(actions.unsaveSubjectShift(subject_info.id, shift_type, shift_number));
                     }
                 }
+                yield put(actions.updateSavedSubjectShift(subject_info.id));
             }
         } while(Array.isArray(subject) && idx < subject.length);
     });
