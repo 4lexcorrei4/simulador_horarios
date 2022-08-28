@@ -32,9 +32,8 @@
 }
 
 #popup-content {
-    width: calc(100% - 40px);
-    height: calc(100% - 40px);
-    padding: 20px;
+    width: 100%;
+    height: 100%;
     overflow-y: auto;
     display: flex;
     flex-flow: column;
@@ -45,6 +44,13 @@
 #popup-content .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: var(--content-bg-color);
+    z-index: 999;
+    padding: 10px 20px;
+    box-shadow: 1px 0 10px 2px var(--menu-border);
 }
 
 #popup-content .header h2 {
@@ -58,7 +64,7 @@
 }
 
 #popup-content .content {
-    padding: 10px 0;
+    padding: 20px;
     height: 100%;
 }
 
@@ -208,6 +214,23 @@
 
 #popup-content #settings #about {
     text-align: justify;
+}
+
+#popup-content #settings #about h4 {
+    margin: 20px 0 10px 0;
+}
+#popup-content #settings #about h4:first-child {
+    margin-top: 10px;
+}
+
+#popup-content #settings #about ul {
+    padding: 0 0 0 15px;
+}
+#popup-content #settings #about ul li {
+    padding-top: 5px;
+}
+#popup-content #settings #about ul li:first-child {
+    padding-top: 0;
 }
 
 @media (min-width: 1025px) {

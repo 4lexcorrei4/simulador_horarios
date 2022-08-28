@@ -40,6 +40,12 @@ const Settings = ({closePopup}) => {
                 Sobre
             </div>
             <div className="content">
+                <h4>Atualização de Informação</h4>
+                <ul>
+                    <li>1º Semestre: início Setembro a meio Janeiro</li>
+                    <li>2º Trimestre: meio Janeiro a meio Fevereiro</li>
+                    <li>2º Semestre: meio Fevereiro a fim Julho</li>
+                </ul>
                 <h4>Objetivo</h4>
                 Permitir aos alunos da <a href="https://www.fct.unl.pt/" target="_blank" rel="noreferrer">NOVA School of Science and Technology | FCT NOVA</a> uma fácil visualização dos vários turnos disponíveis e a construção de um horário otimizado e personalizado.
                 <h4>Contribuir</h4>
